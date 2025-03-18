@@ -5,12 +5,12 @@
         <div class="container-fluid">
             <div class="row">
                 <div class="col-sm-6">
-                    <h3 class="mb-0">Services Table</h3>
+                    <h3 class="mb-0">Customers Table</h3>
                 </div>
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-end">
                         <li class="breadcrumb-item"> <a href="{{ route('admin-dashboard') }}">Dashboard</a> </li>
-                        <li class="breadcrumb-item active" aria-current="page">Services</li>
+                        <li class="breadcrumb-item active" aria-current="page">Customers</li>
                     </ol>
                 </div>
             </div>
@@ -22,56 +22,56 @@
             <div class="row">
                 <div class="col-12">
                     <div class="mb-4">
-                        <div class="card-header d-flex justify-content-end align-items-right">
-                            <a href="{{ route('create-service-type') }}" class="btn btn-primary btn-sm">
-                                <i class="bi bi-plus-circle"></i> New Service Type
-                            </a>
-                        </div>
                         <div class="card-body">
                             <table class="table table-bordered">
                                 <thead>
                                     <tr>
                                         <th style="width: 10px">No#</th>
                                         <th>Image</th>
-                                        <th>Service Name</th>
-                                        <th>Price</th>
+                                        <th>Name</th>
+                                        <th>Email</th>
                                         <th>Status</th>
                                         <th>Actions</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @forelse ($serviceTypes as $index => $serviceType)
+                                    @forelse ($customers as $index => $customer)
                                         <tr class="align-middle">
                                             <td>{{ $index+1 }}</td>
                                             <td>
-                                                @if ($serviceType->service_type_image)
-                                                    <img src="{{ asset('storage/' . $serviceType->service_type_image) }}" alt="{{ $serviceType->service_type_name }}" width="70">
+                                                @if ($customer->user_image)
+                                                    <img src="{{ asset('storage/' . $customer->user_image) }}" alt="{{ $customer->user_name }}" width="70">
                                                 @else
                                                     No Image Available
                                                 @endif
                                             </td>
-                                            <td>{{ $serviceType->service_type_name }}</td>
-                                            <td>{{ number_format($serviceType->service_type_price, 2) }}</td>
+                                            <td>{{ $customer->first_name }} {{ $customer->last_name }}</td>
+                                            <td>{{ $customer->email }}</td>
                                             <td>
-                                                <span class="badge {{ $serviceType->service_status === 'available' ? 'text-bg-success' : 'text-bg-danger' }}">
-                                                    {{ strtoupper(ucfirst(str_replace('_', ' ', $serviceType->service_status))) }}
+                                                <span class="badge 
+                                                    {{ $customer->account_status === 'active' ? 'text-bg-success' : 
+                                                       ($customer->account_status === 'inactive' ? 'text-bg-warning' : 'text-bg-danger') }}">
+                                                    {{ strtoupper(ucfirst(str_replace('_', ' ', $customer->account_status))) }}
                                                 </span>
                                             </td>                                            
                                             <td class="text-center">
-                                                <a href="{{ route('edit-service-type', $serviceType->service_type_id) }}" class="btn btn-warning btn-sm">
+                                                {{-- <a href="{{ route('show-item', $item->item_id) }}" class="btn btn-info btn-sm">
+                                                    <i class="bi bi-info-circle"></i>
+                                                </a>
+                                                <a href="{{ route('edit-item', $item->item_id) }}" class="btn btn-warning btn-sm">
                                                     <i class="bi bi-pencil-square"></i>
                                                 </a>
-                                                <form action="{{ route('delete-service-type', $serviceType) }}" method="POST" class="d-inline">
+                                                <form action="{{ route('delete-item', $item) }}" method="POST" class="d-inline">
                                                     @csrf
                                                     <button type="submit" class="btn btn-danger btn-sm">
                                                         <i class="bi bi-trash"></i>
                                                     </button>
-                                                </form>
-                                            </td>                                            
+                                                </form> --}}
+                                            </td>
                                         </tr>
                                     @empty
                                         <tr>
-                                            <td colspan="6" class="text-center">No Services Available</td>
+                                            <td colspan="6" class="text-center">No Customers Available</td>
                                         </tr>
                                     @endforelse
                                 </tbody>
@@ -83,3 +83,4 @@
         </div>
     </div>
 @endsection
+

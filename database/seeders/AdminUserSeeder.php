@@ -9,7 +9,7 @@ use App\Models\Address;
 use Illuminate\Support\Facades\Hash;
 use Carbon\Carbon;
 
-class EmployeeSeeder extends Seeder
+class AdminUserSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -23,7 +23,7 @@ class EmployeeSeeder extends Seeder
             'password' => Hash::make('adminadmin'),
             'date_of_birth' => '2003-04-19',
             'contact_no' => '00000000000',
-            'user_type' => 'employee',
+            'user_type' => 'admin',
             'account_status' => 'active'
         ]);
 

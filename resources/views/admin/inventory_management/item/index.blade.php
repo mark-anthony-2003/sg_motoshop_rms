@@ -10,7 +10,7 @@
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-end">
                         <li class="breadcrumb-item"> <a href="{{ route('items-table') }}">Items</a> </li>
-                        <li class="breadcrumb-item active" aria-current="page">Services</li>
+                        <li class="breadcrumb-item active" aria-current="page">Items</li>
                     </ol>
                 </div>
             </div>
@@ -76,7 +76,7 @@
                                         </tr>
                                     @empty
                                         <tr>
-                                            <td colspan="6">No Products Available</td>
+                                            <td colspan="6" class="text-center">No Items Available</td>
                                         </tr>
                                     @endforelse
                                 </tbody>

@@ -4,7 +4,7 @@
             <li class="nav-item">
                 <a href="{{ route('home-page') }}" class="nav-link">Logo</a>
             </li>
-            @if (auth()->check() && (auth()->check() && auth()->user()->user_type === 'employee'))
+            @if (auth()->check() && (auth()->check() && auth()->user()->user_type === 'admin'))
                 <li class="nav-item">
                     <a class="nav-link" data-lte-toggle="sidebar" href="#" role="button">
                         <i class="bi bi-list"></i>
@@ -13,7 +13,10 @@
             @endif
         </ul>
         <ul class="navbar-nav">
-            @if (!auth()->check() || (auth()->check() && auth()->user()->user_type === 'customer'))
+            @if (
+                !auth()->check() ||
+                (auth()->check() && auth()->user()->user_type === 'customer') ||
+                (auth()->check() && auth()->user()->user_type === 'employee'))
                 <li class="nav-item d-none d-md-block">
                     <a href="#" class="nav-link">
                         Products

@@ -21,12 +21,18 @@ class UserSignInController extends Controller
         return view('pages.auth.signin', compact('userType'));
     }
 
+    public function showAdminForm()
+    {
+        $userType = 'admin';
+        return view('pages.auth.signin', compact('userType'));
+    }
+
     public function signIn(Request $request)
     {
         $request->validate([
             'email'      => 'required|email',
             'password'   => 'required',
-            'user_type'  => 'required|in:customer,employee'
+            'user_type'  => 'required|in:customer,employee,admin'
         ]);
 
         $user = User::where('email', $request->email)
@@ -36,7 +42,7 @@ class UserSignInController extends Controller
         if ($user && Hash::check($request->password, $user->password)) {
             Auth::login($user);
 
-            if ($user->user_type === 'employee') {
+            if ($user->user_type === 'admin') {
                 return redirect()->route('admin-dashboard');
             }
             return redirect()->route('home-page');

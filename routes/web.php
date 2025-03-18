@@ -3,6 +3,8 @@
 use App\Http\Controllers\AddressController;
 use App\Http\Controllers\ItemController;
 use App\Http\Controllers\ServiceTypeController;
+use App\Http\Controllers\UserCustomerController;
+use App\Http\Controllers\UserEmployeeController;
 use App\Http\Controllers\UserSignInController;
 use App\Http\Controllers\UserSignUpController;
 use Illuminate\Support\Facades\Auth;
@@ -26,7 +28,7 @@ Route::get('/', function () {
 Route::middleware('auth')->group(function() {
     // dashboard for employees onlys
     Route::get('/dashboard', function () {
-        if (Auth::user()->user_type === 'employee') {
+        if (Auth::user()->user_type === 'admin') {
             return view('admin.dashboard.analytics');
         }
         return abort(403); // Forbidden for non-employees
@@ -66,6 +68,17 @@ Route::middleware('auth')->group(function() {
             ->name('delete-service-type');
     });
 
+    // user management - customers
+    Route::prefix('customers')->group(function() {
+        Route::get('/', [UserCustomerController::class, 'showCustomersTable'])
+            ->name('customers-table');
+    });
+    // user management - employee
+    Route::prefix('employees')->group(function() {
+        Route::get('/', [UserEmployeeController::class, 'showEmployeesTable'])
+            ->name('employees-table');
+    });
+
     // logout
     Route::post('/sign-out', function() {
         Auth::logout();
@@ -83,6 +96,8 @@ Route::middleware('guest')->group(function() {
         ->name('sign-in.customer');
     Route::get('/sign-in/employee', [UserSignInController::class, 'showEmployeeForm'])
         ->name('sign-in.employee');
+    Route::get('/admin', [UserSignInController::class, 'showAdminForm'])
+        ->name('/sign-in.admin');
     
     Route::post('/sign-in', [UserSignInController::class, 'signIn'])
         ->name('sign-in.submit');

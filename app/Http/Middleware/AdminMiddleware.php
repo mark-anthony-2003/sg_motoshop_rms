@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\Response;
 
-class EmployeeMiddleware
+class AdminMiddleware
 {
     /**
      * Handle an incoming request.
@@ -16,9 +16,9 @@ class EmployeeMiddleware
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if (Auth::check() && Auth::user()->user_type === 'employee') {
+        if (Auth::check() && Auth::user()->user_type === 'admin') {
             return $next($request);
         }
-        return redirect()->route('home-page')->withErrors(['access' => 'Unauthorized access.']);
+        abort(403, 'Unauthorized access.');
     }
 }

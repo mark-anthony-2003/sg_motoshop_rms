@@ -20,7 +20,8 @@ return new class extends Migration
             $table->string('password');
             $table->string('contact_no')->nullable();
             $table->date('date_of_birth')->nullable();
-            $table->enum('user_type', ['customer', 'employee'])->default('customer');
+            $table->string('user_image')->nullable();
+            $table->enum('user_type', ['customer', 'employee', "admin"])->default('customer');
             $table->enum('account_status', ['active', 'inactive', 'suspended']);
             $table->rememberToken();
             $table->timestamps();

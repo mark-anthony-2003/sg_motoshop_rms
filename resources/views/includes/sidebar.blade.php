@@ -1,4 +1,4 @@
-@if (auth()->check() && auth()->user()->user_type === 'employee')
+@if (auth()->check() && auth()->user()->user_type === 'admin')
     <aside class="app-sidebar bg-body-secondary shadow">
         <div class="sidebar-wrapper">
             <nav class="mt-2">
@@ -31,13 +31,13 @@
                     <li class="nav-header">User Management</li>
                     
                     <li class="nav-item">
-                        <a href="#" class="nav-link">
+                        <a href="{{ route('employees-table') }}" class="nav-link">
                             <i class="nav-icon bi bi-people"></i>
                             <p>Employees</p>
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a href="#" class="nav-link">
+                        <a href="{{ route('customers-table') }}" class="nav-link">
                             <i class="nav-icon bi bi-person-circle"></i>
                             <p>Customers</p>
                         </a>

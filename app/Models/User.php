@@ -26,6 +26,7 @@ class User extends Authenticatable
         'email',
         'password',
         'date_of_birth',
+        'user_image',
         'contact_no',
         'user_type',
         'account_status'
@@ -51,12 +52,16 @@ class User extends Authenticatable
         'password' => 'hashed',
     ];
 
-    // public function employee()
-    // {
-    //     return $this->hasOne(Employee::class, 'user_id', 'user_id');
-    // }
+    public function employees(): HasMany
+    {
+        return $this->hasMany(Employee::class, 'user_id');
+    }
     public function addresses(): HasMany
     {
         return $this->hasMany(Address::class, 'user_id');
+    }
+    public function serviceTransactions(): HasMany
+    {
+        return $this->hasMany(ServiceTransaction::class, 'user_id');
     }
 }
