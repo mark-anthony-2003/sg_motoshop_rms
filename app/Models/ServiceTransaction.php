@@ -4,8 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class ServiceTransaction extends Model
 {
@@ -21,14 +21,14 @@ class ServiceTransaction extends Model
 
     public function users(): HasMany
     {
-        return $this->hasMany(User::class, 'user_id');
+        return $this->hasMany(User::class);
     }
-    public function service(): BelongsTo
+    public function service(): HasOne
     {
-        return $this->belongsTo(Service::class);
+        return $this->HasOne(Service::class);
     }
-    public function employee(): BelongsTo
+    public function employee(): HasOne
     {
-        return $this->belongsTo(Employee::class, 'employee_id');
+        return $this->HasOne(Employee::class);
     }
 }

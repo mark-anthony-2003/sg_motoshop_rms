@@ -15,7 +15,7 @@ class ServiceDetail extends Model
     protected $fillable = [
         'service_id',
         'service_type_id',
-        // 'part_id'
+        'part_id'
     ];
 
     public function serviceTypes(): HasMany

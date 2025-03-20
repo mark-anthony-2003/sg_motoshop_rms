@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Employee extends Model
 {
@@ -23,11 +24,11 @@ class Employee extends Model
 
     public function user(): BelongsTo
     {
-        return $this->belongsTo(User::class, 'user_id');
+        return $this->belongsTo(User::class);
     }
     public function serviceTransaction(): BelongsTo
     {
-        return $this->belongsTo(ServiceTransaction::class, 'employee_id');
+        return $this->belongsTo(ServiceTransaction::class);
     }
     public function positionTypes(): HasMany
     {
@@ -36,5 +37,13 @@ class Employee extends Model
     public function salaryTypes(): HasMany
     {
         return $this->hasMany(SalaryType::class);
+    }
+    public function equipment(): HasOne
+    {
+        return $this->hasOne(Equipment::class);
+    }
+    public function inventory(): BelongsTo
+    {
+        return $this->belongsTo(Inventory::class);
     }
 }

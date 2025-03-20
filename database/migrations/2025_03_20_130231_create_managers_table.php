@@ -11,10 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('finances', function (Blueprint $table) {
-            $table->id('finance_id');
-            $table->integer('accounts');
-            $table->date('date_recorded');
+        Schema::create('managers', function (Blueprint $table) {
+            $table->foreignId('position_type_id')->constrained('position_types', 'position_type_id')->onDelete('cascade');
+            $table->string('area_checker');
+            $table->string('inventory_recorder');
+            $table->string('payroll_assistant');
             $table->timestamps();
         });
     }
@@ -24,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('finances');
+        Schema::dropIfExists('managers');
     }
 };

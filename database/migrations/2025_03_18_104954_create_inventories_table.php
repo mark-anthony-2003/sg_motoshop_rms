@@ -14,11 +14,11 @@ return new class extends Migration
         Schema::create('inventories', function (Blueprint $table) {
             $table->id('inventory_id');
             $table->foreignId('product_id')->constrained('products', 'product_id')->onDelete('cascade');
-            $table->foreignId('services')->constrained('services', 'service_id')->onDelete('cascade');
+            $table->foreignId('service_id')->constrained('services', 'service_id')->onDelete('cascade');
             $table->foreignId('employee_id')->constrained('employees', 'employee_id')->onDelete('cascade');
             $table->foreignId('equipment_id')->constrained('equipments', 'equipment_id')->onDelete('cascade');
             $table->integer('sales');
-            $table->foreignId('invetory_id')->constrained('inventories', 'inventory_id')->onDelete('cascade');
+            $table->foreignId('finance_id')->constrained('finances', 'finance_id')->onDelete('cascade');
             $table->timestamps();
         });
     }

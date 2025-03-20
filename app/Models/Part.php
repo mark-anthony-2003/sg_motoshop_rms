@@ -6,17 +6,14 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class ServiceType extends Model
+class Part extends Model
 {
     use HasFactory;
 
-    protected $primaryKey = 'service_type_id';
+    protected $primaryKey = 'part_id';
 
     protected $fillable = [
-        'service_type_name',
-        'service_type_price',
-        'service_type_image',
-        'service_status'
+        'part_name'
     ];
 
     public function serviceDetail(): BelongsTo

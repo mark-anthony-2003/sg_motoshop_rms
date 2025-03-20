@@ -5,13 +5,13 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Salary extends Model
+class PerDaySalary extends Model
 {
     use HasFactory;
 
     protected $fillable = [
-        'finance_id',
-        'employee_id',
-        'basic_salary'
+        'salary_type_id',
+        'daily_rate',
+        'days_worked'
     ];
 }
