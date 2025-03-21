@@ -37,41 +37,6 @@
                                 <span class="bi bi-eye-slash" id="toggleConfirmPassword" style="cursor: pointer;"></span>
                             </div>
                         </div>
-                        
-                        {{-- <div>
-                            <h3>Address</h3>
-                            <div class="input-group mb-3">
-                                <label for="country">Country</label>
-                                <select name="country" id="country">
-                                    <option value="philippines" selected>Philippines</option>
-                                </select>
-                            </div>
-                            <div class="input-group mb-3">
-                                <label for="province">State/Province</label>
-                                <select name="province" id="province">
-                                    <option>Select State/Province</option>
-                                </select>
-                            </div>
-                            <div class="input-group mb-3">
-                                <label for="city">City/Town/Municipality</label>
-                                <select name="city" id="city">
-                                    <option>Select City/Town/Municipality</option>
-                                </select>
-                            </div>
-                            <div class="input-group mb-3">
-                                <label for="barangay">Street/Barangay</label>
-                                <select name="barangay" id="barangay">
-                                    <option>Select Street/Barangay</option>
-                                </select>
-                            </div>
-                            <div class="input-group mb-3">
-                                <label for="address_type">Address Type</label>
-                                <select name="address_type" id="address_type">
-                                    <option value="home">Home</option>
-                                    <option value="work">Work</option>
-                                </select>
-                            </div>
-                        </div> --}}
 
                         <div class="d-grid gap-2">
                             <button type="submit" class="btn btn-primary">
@@ -119,61 +84,5 @@
                 icon.classList.add('bi-eye-slash')
             }
         })
-
-        // $(document).ready(function () {
-        //     $('#province').empty().append('<option>Select Province</option>')
-    
-        //     // Fetch Provinces
-        //     $.get('/address/provinces', function(data) {
-        //         if (data.length > 0) {
-        //             data.forEach(function(item) {
-        //                 $('#province').append(`<option value="${item.name}" data-code="${item.code}">${item.name}</option>`)
-        //             });
-        //         } else {
-        //             $('#province').append('<option disabled>No provinces found</option>')
-        //         }
-        //     }).fail(function() {
-        //         alert("Failed to load provinces.")
-        //     });
-    
-        //     // Fetch Cities based on selected Province
-        //     $('#province').change(function () {
-        //         var provinceCode = $('#province option:selected').data('code')
-        //         $('#city').empty().append('<option>Loading...</option>')
-        //         $('#barangay').empty().append('<option>Select Barangay</option>')
-    
-        //         $.get(`/address/cities/${provinceCode}`, function(data) {
-        //             $('#city').empty().append('<option>Select City/Town/Municipality</option>')
-        //             if (data.length > 0) {
-        //                 data.forEach(function(item) {
-        //                     $('#city').append(`<option value="${item.name}" data-code="${item.code}">${item.name}</option>`)
-        //                 })
-        //             } else {
-        //                 $('#city').append('<option disabled>No cities found</option>')
-        //             }
-        //         }).fail(function() {
-        //             alert("Failed to load cities.")
-        //         });
-        //     });
-    
-        //     // Fetch Barangays based on selected City
-        //     $('#city').change(function() {
-        //         var cityCode = $('#city option:selected').data('code')
-        //         $('#barangay').empty().append('<option>Loading...</option>')
-    
-        //         $.get(`/address/barangays/${cityCode}`, function(data) {
-        //             $('#barangay').empty().append('<option>Select Barangay</option>')
-        //             if (data.length > 0) {
-        //                 data.forEach(function(item) {
-        //                     $('#barangay').append(`<option value="${item.name}">${item.name}</option>`)
-        //                 })
-        //             } else {
-        //                 $('#barangay').append('<option disabled>No Barangays found</option>')
-        //             }
-        //         }).fail(function() {
-        //             alert("Failed to load barangays.")
-        //         })
-        //     })
-        // })
     </script>
 @endsection

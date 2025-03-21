@@ -21,12 +21,13 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+// Public Home Page
 Route::get('/', function () {
     return view('pages.index');
 })->name('home-page');
 
-Route::middleware('auth')->group(function() {
-    // dashboard for employees onlys
+// Admin Routes (Admin Access)
+Route::middleware(['auth', 'admin'])->group(function() {
     Route::get('/dashboard', function () {
         if (Auth::user()->user_type === 'admin') {
             return view('admin.dashboard.analytics');
@@ -34,7 +35,7 @@ Route::middleware('auth')->group(function() {
         return abort(403); // Forbidden for non-employees
     })->name('admin-dashboard');
 
-    // product management (only for employees)
+    // Product Management (Admin Only)
     Route::prefix('items')->group(function() {
         Route::get('/', [ItemController::class, 'showItemsTable'])
             ->name('items-table');
@@ -52,7 +53,7 @@ Route::middleware('auth')->group(function() {
             ->name('delete-item');
     });
 
-    // service type management
+    // Service Type Management
     Route::prefix('service-types')->group(function() {
         Route::get('/', [ServiceTypeController::class, 'showServiceTypesTable'])
             ->name('service-type-table');
@@ -68,25 +69,50 @@ Route::middleware('auth')->group(function() {
             ->name('delete-service-type');
     });
 
-    // user management - customers
+    // User Management - Customers (Admin Access Only)
     Route::prefix('customers')->group(function() {
         Route::get('/', [UserCustomerController::class, 'showCustomersTable'])
             ->name('customers-table');
     });
-    // user management - employee
+    // User Management - Employees (Admin Access Only)
     Route::prefix('employees')->group(function() {
         Route::get('/', [UserEmployeeController::class, 'showEmployeesTable'])
             ->name('employees-table');
     });
 
-    // logout
+    // Logout Route
     Route::post('/sign-out', function() {
         Auth::logout();
         return redirect()->route('sign-in.selection');
     })->name('sign-out');
 });
 
-// guests routes
+// Employee Routes (Requires Auth & Employee Role)
+Route::middleware(['auth', 'employee'])->group(function() {
+    
+    
+    // Logout Route
+    Route::post('/sign-out', function() {
+        Auth::logout();
+        return redirect()->route('sign-in.selection');
+    })->name('sign-out');
+});
+
+// Customer Routes (Requires Auth & Customer Role)
+Route::middleware(['auth', 'customer'])->group(function() {
+    Route::get('/{customerId}', [UserCustomerController::class, 'showCustomerProfile'])
+        ->name('customer.profile');
+    Route::post('/{customerId}', [UserCustomerController::class, 'updateCustomerProfile'])
+        ->name('customer.profile_update');
+    
+    // Logout Route
+    Route::post('/sign-out', function() {
+        Auth::logout();
+        return redirect()->route('sign-in.selection');
+    })->name('sign-out');
+});
+
+// Guest Routes (For Sign-in & Sign Up)
 Route::middleware('guest')->group(function() {
     Route::get('/sign-in-selection', function() {
         return view('pages.auth.index');
@@ -97,7 +123,7 @@ Route::middleware('guest')->group(function() {
     Route::get('/sign-in/employee', [UserSignInController::class, 'showEmployeeForm'])
         ->name('sign-in.employee');
     Route::get('/admin', [UserSignInController::class, 'showAdminForm'])
-        ->name('/sign-in.admin');
+        ->name('sign-in.admin');
     
     Route::post('/sign-in', [UserSignInController::class, 'signIn'])
         ->name('sign-in.submit');
@@ -108,7 +134,7 @@ Route::middleware('guest')->group(function() {
         ->name('sign-up.submit');
 });
 
-// address api routes
+// Address API Routes
 Route::prefix('address')->group(function() {
     Route::get('/countries', [AddressController::class, 'getCountries']);
     Route::get('/provinces', [AddressController::class, 'getProvinces']);
