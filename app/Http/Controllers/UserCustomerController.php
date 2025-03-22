@@ -13,13 +13,10 @@ class UserCustomerController extends Controller
         return view('admin.user_management.customers.index', compact('customers'));
     }
 
-    public function showCustomerProfile($customerId)
+    public function showCustomerProfile($userId)
     {
-        $customer = User::where('user_type', 'customer')->find($customerId);
-        if (!$customer) {
-            abort(404, 'Customer not found');
-        }
-        return view('pages.user_profile.index', compact('customer'));
+        $user = User::findOrFail($userId);
+        return view('pages.user_profile.index', compact('user'));
     }
 
     public function updateCustomerProfile(Request $request, $customerId)
@@ -27,11 +24,11 @@ class UserCustomerController extends Controller
         $customer = User::findOrFail($customerId);
 
         $validated = $request->validate([
-            'first_name' => 'required|string|max:225',
-            'last_name' => 'required|string|max:225',
+            'first_name'    => 'required|string|max:225',
+            'last_name'     => 'required|string|max:225',
             'date_of_birth' => 'nullable|date',
-            'contact_no' => 'nullable|string|max:20',
-            'user_image' => 'nullable|image|mimes:png,jpg|max:5000'
+            'contact_no'    => 'nullable|string|max:20',
+            'user_image'    => 'nullable|image|mimes:png,jpg|max:5000'
         ]);
 
         $userImagePath = $customer->user_image;
@@ -40,11 +37,11 @@ class UserCustomerController extends Controller
         }
 
         $customer->update([
-            'first_name' => $validated['first_name'],
-            'last_name' => $validated['last_name'],
+            'first_name'    => $validated['first_name'],
+            'last_name'     => $validated['last_name'],
             'date_of_birth' => $validated['date_of_birth'] ?? $customer->date_of_birth,
-            'contact_no' => $validated['contact_no'] ?? $customer->contact_no,
-            'user_image' => $userImagePath
+            'contact_no'    => $validated['contact_no'] ?? $customer->contact_no,
+            'user_image'    => $userImagePath
         ]);
 
         return redirect()->route('customer.profile', $customerId)->with('success', 'Profile updated successfully!');

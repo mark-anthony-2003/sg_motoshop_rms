@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 
 class AddressController extends Controller
 {
@@ -19,34 +20,43 @@ class AddressController extends Controller
 
     public function getProvinces()
     {
-        $res = Http::get("https://psgc.gitlab.io/api/provinces");
-        
-        if ($res->failed()) {
+        try {
+            $res = Http::timeout(10)->get("https://psgc.gitlab.io/api/provinces");
+            if ($res->successful()) {
+                return response()->json($res->json());
+            }
             return response()->json(['error' => 'Failed to fetch provinces.'], 500);
+        } catch (\Exception $e) {
+            Log::error('Province API Error: ' . $e->getMessage());
+            return response()->json(['error' => 'Service unavailable.'], 503);
         }
-
-        return response()->json($res->json());
     }
 
     public function getStates($provinceCode)
     {
-        $res = Http::get("https://psgc.gitlab.io/api/provinces/{$provinceCode}/cities-municipalities");
-
-        if ($res->failed()) {
-            return response()->json(['error' => 'Failed to fetch cities/municipalities.'], 500);
+        try {
+            $res = Http::timeout(10)->get("https://psgc.gitlab.io/api/provinces/{$provinceCode}/cities-municipalities");
+            if ($res->successful()) {
+                return response()->json($res->json());
+            }
+            return response()->json(['error' => 'Failed to fetch cities.'], 500);
+        } catch (\Exception $e) {
+            Log::error('City API Error: ' . $e->getMessage());
+            return response()->json(['error' => 'Service unavailable.'], 503);
         }
-
-        return response()->json($res->json());
     }
 
     public function getBarangays($stateCode)
     {
-        $res = Http::get("https://psgc.gitlab.io/api/cities-municipalities/{$stateCode}/barangays");
-        
-        if ($res->failed()) {
+        try {
+            $res = Http::timeout(10)->get("https://psgc.gitlab.io/api/cities-municipalities/{$stateCode}/barangays");
+            if ($res->successful()) {
+                return response()->json($res->json());
+            }
             return response()->json(['error' => 'Failed to fetch barangays.'], 500);
+        } catch (\Exception $e) {
+            Log::error('Barangay API Error: ' . $e->getMessage());
+            return response()->json(['error' => 'Service unavailable.'], 503);
         }
-        
-        return response()->json($res->json());
     }
 }

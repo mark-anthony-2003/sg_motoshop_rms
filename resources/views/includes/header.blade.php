@@ -42,13 +42,13 @@
                         <li class="dropdown-divider"></li>
                         @if (auth()->check() && (auth()->check() && auth()->user()->user_type === 'customer'))
                             <li>
-                                <a href="{{ route('customer.profile', ['customerId' => auth()->user()->user_id]) }}" class="dropdown-item d-flex align-items-center">
+                                <a href="{{ route('customer.profile', ['userId' => auth()->user()->user_id]) }}" class="dropdown-item d-flex align-items-center">
                                     <i class="bi bi-person-circle me-2"></i> User Profile
                                 </a>
                             </li>
                         @elseif (auth()->check() && (auth()->check() && auth()->user()->user_type === 'employee'))
                             <li>
-                                <a href="#" class="dropdown-item d-flex align-items-center">
+                                <a href="{{ route('employee.profile', ['userId' => auth()->user()->user_id]) }}" class="dropdown-item d-flex align-items-center">
                                     <i class="bi bi-person-circle me-2"></i> User Profile
                                 </a>
                             </li>

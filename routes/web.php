@@ -127,10 +127,16 @@ Route::middleware(['auth', 'admin'])->group(function() {
 
 Route::middleware('auth')->group(function() {
     // Customer Routes
-    Route::get('/{customerId}', [UserCustomerController::class, 'showCustomerProfile'])
+    Route::get('/customer/{userId}', [UserCustomerController::class, 'showCustomerProfile'])
         ->name('customer.profile');
-    Route::post('/{customerId}', [UserCustomerController::class, 'updateCustomerProfile'])
+    Route::post('/customer/{userId}', [UserCustomerController::class, 'updateCustomerProfile'])
         ->name('customer.profile_update');
+
+    // Employee Routes
+    Route::get('/employee/{userId}', [UserEmployeeController::class, 'showEmployeeProfile'])
+        ->name('employee.profile');
+    Route::post('/employee/{userId}', [UserEmployeeController::class, 'updateEmployeeProfile'])
+        ->name('employee.profile_update');
     
     // Logout Route
     Route::post('/sign-out', function() {

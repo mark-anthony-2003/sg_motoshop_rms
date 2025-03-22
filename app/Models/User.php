@@ -40,9 +40,11 @@ class User extends Authenticatable
     protected static function boot()
     {
         parent::boot();
-        // Automaticallt generate UUID when creating a new user
+        // Automatically generate UUID when creating a new user
         static::creating(function($user) {
-            $user->user_id = Str::uuid();
+            if (empty($user->user_id)) {
+                $user->user_id = (string) Str::uuid();
+            }
         });
     }
 
@@ -72,7 +74,7 @@ class User extends Authenticatable
     }
     public function addresses(): HasMany
     {
-        return $this->hasMany(Address::class);
+        return $this->hasMany(Address::class, 'user_id');
     }
     public function serviceTransactions(): HasMany
     {

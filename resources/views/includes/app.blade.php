@@ -17,6 +17,7 @@
       integrity="sha256-9kPW/n5nn53j4WMRYAxe9c1rCY96Oogo/MKSVdKzPmI="
       crossorigin="anonymous"
     />
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body class="sidebar-expand-lg bg-body-tertiary">
     <div class="app-wrapper">
