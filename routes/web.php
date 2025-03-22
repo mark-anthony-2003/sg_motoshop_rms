@@ -10,6 +10,8 @@ use App\Http\Controllers\UserSignUpController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
+use function PHPUnit\Framework\returnSelf;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -26,13 +28,46 @@ Route::get('/', function () {
     return view('pages.index');
 })->name('home-page');
 
+// Guest Routes (For Sign-in & Sign Up)
+Route::middleware('guest')->group(function() {
+    Route::get('/sign-in-selection', function() {
+        // Check if the user is already logged in an redirect based on thier role
+        if (Auth::check()) {
+            $user = Auth::user();
+            if ($user->user_type === 'admin') {
+                return redirect()->route('admin-dashboard');
+            } elseif ($user->user_type === 'employee') {
+                return redirect()->route('home-page');
+            } elseif ($user->user_type === 'customer') {
+                return redirect()->route('home-page');
+            }
+        }
+        return view('pages.auth.index');
+    })->name('sign-in.selection');
+
+    Route::get('/sign-in/customer', [UserSignInController::class, 'showCustomerForm'])
+        ->name('sign-in.customer');
+    Route::get('/sign-in/employee', [UserSignInController::class, 'showEmployeeForm'])
+        ->name('sign-in.employee');
+    Route::get('/admin', [UserSignInController::class, 'showAdminForm'])
+        ->name('sign-in.admin');
+    
+    Route::post('/sign-in', [UserSignInController::class, 'signIn'])
+        ->name('sign-in.submit');
+
+    Route::get('/sign-up', [UserSignUpController::class, 'showCustomerForm'])
+        ->name('sign-up');
+    Route::post('/sign-up', [UserSignUpController::class, 'signUp'])
+        ->name('sign-up.submit');
+});
+
 // Admin Routes (Admin Access)
 Route::middleware(['auth', 'admin'])->group(function() {
     Route::get('/dashboard', function () {
         if (Auth::user()->user_type === 'admin') {
             return view('admin.dashboard.analytics');
         }
-        return abort(403); // Forbidden for non-employees
+        return abort(403); // Forbidden for non-employees & customers
     })->name('admin-dashboard');
 
     // Product Management (Admin Only)
@@ -83,23 +118,15 @@ Route::middleware(['auth', 'admin'])->group(function() {
     // Logout Route
     Route::post('/sign-out', function() {
         Auth::logout();
+        session()->invalidate();
+        session()->regenerateToken();
+
         return redirect()->route('sign-in.selection');
     })->name('sign-out');
 });
 
-// Employee Routes (Requires Auth & Employee Role)
-Route::middleware(['auth', 'employee'])->group(function() {
-    
-    
-    // Logout Route
-    Route::post('/sign-out', function() {
-        Auth::logout();
-        return redirect()->route('sign-in.selection');
-    })->name('sign-out');
-});
-
-// Customer Routes (Requires Auth & Customer Role)
-Route::middleware(['auth', 'customer'])->group(function() {
+Route::middleware('auth')->group(function() {
+    // Customer Routes
     Route::get('/{customerId}', [UserCustomerController::class, 'showCustomerProfile'])
         ->name('customer.profile');
     Route::post('/{customerId}', [UserCustomerController::class, 'updateCustomerProfile'])
@@ -108,30 +135,11 @@ Route::middleware(['auth', 'customer'])->group(function() {
     // Logout Route
     Route::post('/sign-out', function() {
         Auth::logout();
+        session()->invalidate();
+        session()->regenerateToken();
+
         return redirect()->route('sign-in.selection');
     })->name('sign-out');
-});
-
-// Guest Routes (For Sign-in & Sign Up)
-Route::middleware('guest')->group(function() {
-    Route::get('/sign-in-selection', function() {
-        return view('pages.auth.index');
-    })->name('sign-in.selection');
-
-    Route::get('/sign-in/customer', [UserSignInController::class, 'showCustomerForm'])
-        ->name('sign-in.customer');
-    Route::get('/sign-in/employee', [UserSignInController::class, 'showEmployeeForm'])
-        ->name('sign-in.employee');
-    Route::get('/admin', [UserSignInController::class, 'showAdminForm'])
-        ->name('sign-in.admin');
-    
-    Route::post('/sign-in', [UserSignInController::class, 'signIn'])
-        ->name('sign-in.submit');
-
-    Route::get('/sign-up', [UserSignUpController::class, 'showCustomerForm'])
-        ->name('sign-up');
-    Route::post('/sign-up', [UserSignUpController::class, 'signUp'])
-        ->name('sign-up.submit');
 });
 
 // Address API Routes

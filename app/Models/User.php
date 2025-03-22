@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Str;
 use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable
@@ -21,6 +22,8 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $primaryKey = 'user_id';
+    public $incrementing = false;
+    protected $keyType = 'string';
 
     protected $fillable = [
         'first_name',
@@ -33,6 +36,15 @@ class User extends Authenticatable
         'user_type',
         'account_status'
     ];
+
+    protected static function boot()
+    {
+        parent::boot();
+        // Automaticallt generate UUID when creating a new user
+        static::creating(function($user) {
+            $user->user_id = Str::uuid();
+        });
+    }
 
     /**
      * The attributes that should be hidden for serialization.

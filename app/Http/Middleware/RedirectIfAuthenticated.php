@@ -21,6 +21,15 @@ class RedirectIfAuthenticated
 
         foreach ($guards as $guard) {
             if (Auth::guard($guard)->check()) {
+                $user = Auth::user();
+
+                if ($user->user_type === 'admin' && !$request->routeIs('admin-dashboard')) {
+                    return redirect()->route('admin-dashboard');
+                } elseif ($user->user_type === 'employee' && !$request->routeIs('home-page')) {
+                    return redirect()->route('home-page');
+                } elseif ($user->user_type === 'customer' && !$request->routeIs('home-page')) {
+                    return redirect()->route('home-page');
+                }
                 return redirect(RouteServiceProvider::HOME);
             }
         }

@@ -19,6 +19,6 @@ class AdminMiddleware
         if (Auth::check() && Auth::user()->user_type === 'admin') {
             return $next($request);
         }
-        abort(403, 'Unauthorized access.');
+        return redirect()->route('sign-in.selection');
     }
 }

@@ -11,18 +11,27 @@ class UserSignInController extends Controller
 {
     public function showCustomerForm()
     {
+        if (Auth::check()) {
+            return redirect()->route('home-page');
+        }
         $userType = 'customer';
         return view('pages.auth.signin', compact('userType'));
     }
 
     public function showEmployeeForm()
     {
+        if (Auth::check()) {
+            return redirect()->route('home-page');
+        }
         $userType = 'employee';
         return view('pages.auth.signin', compact('userType'));
     }
 
     public function showAdminForm()
     {
+        if (Auth::check()) {
+            return redirect()->route('admin-dashboard');
+        }
         $userType = 'admin';
         return view('pages.auth.signin', compact('userType'));
     }

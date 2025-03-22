@@ -19,6 +19,6 @@ class CustomerMiddleware
         if (Auth::check() && Auth::user()->user_type === 'customer') {
             return $next($request);
         }
-        abort(403, 'Unauthorized access.');
+        return redirect()->route('sign-in.selection');
     }
 }
