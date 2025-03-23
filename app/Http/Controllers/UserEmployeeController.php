@@ -16,7 +16,7 @@ class UserEmployeeController extends Controller
     public function showEmployeeProfile($userId)
     {
         $user = User::findOrFail($userId);
-        return view('pages.user_profile.index', compact('user'));
+        return view('pages.profile.index', compact('user'));
     }
 
     public function updateEmployeeProfile(Request $request, $employeeId)

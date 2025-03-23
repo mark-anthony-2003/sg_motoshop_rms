@@ -7,6 +7,8 @@ use App\Http\Controllers\UserCustomerController;
 use App\Http\Controllers\UserEmployeeController;
 use App\Http\Controllers\UserSignInController;
 use App\Http\Controllers\UserSignUpController;
+use App\Http\Controllers\OrderItemController;
+use App\Http\Controllers\ReservationController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -63,7 +65,7 @@ Route::middleware('guest')->group(function() {
 
 // Admin Routes (Admin Access)
 Route::middleware(['auth', 'admin'])->group(function() {
-    Route::get('/dashboard', function () {
+    Route::get('/dashboard', function() {
         if (Auth::user()->user_type === 'admin') {
             return view('admin.dashboard.analytics');
         }
@@ -127,16 +129,39 @@ Route::middleware(['auth', 'admin'])->group(function() {
 
 Route::middleware('auth')->group(function() {
     // Customer Routes
-    Route::get('/customer/{userId}', [UserCustomerController::class, 'showCustomerProfile'])
-        ->name('customer.profile');
-    Route::post('/customer/{userId}', [UserCustomerController::class, 'updateCustomerProfile'])
-        ->name('customer.profile_update');
+    Route::prefix('customer')->group(function() {
+        // Profile Settings
+        Route::get('/{userId}', [UserCustomerController::class, 'showCustomerProfile'])
+            ->name('customer.profile');
+        Route::post('/{userId}', [UserCustomerController::class, 'updateCustomerProfile'])
+            ->name('customer.profile_update');
+        // Order Items
+        Route::get('/{userId}', [UserCustomerController::class, 'showCustomerOrderItems'])
+            ->name('customer.orderItems');
+    });
+
+    Route::prefix('shop')->group(function() {
+        // Items
+        Route::get('/items', [OrderItemController::class, 'showItemCards'])
+            ->name('shop.items');
+        Route::get('/items/{orderItemId}', [OrderItemController::class, 'showItemCardDetail'])
+            ->name('shop.showOrderItem');
+        Route::post('/items/{orderItemId}', [OrderItemController::class, 'addToCartItem'])
+            ->name('shop.addToCartItem');
+        
+        // Reservation
+        Route::get('/reservation', [ReservationController::class, 'showReservationForm'])
+            ->name('shop.reservation');
+    });
 
     // Employee Routes
-    Route::get('/employee/{userId}', [UserEmployeeController::class, 'showEmployeeProfile'])
-        ->name('employee.profile');
-    Route::post('/employee/{userId}', [UserEmployeeController::class, 'updateEmployeeProfile'])
-        ->name('employee.profile_update');
+    Route::prefix('/employee')->group(function() {
+        // Profile Settings
+        Route::get('/{userId}', [UserEmployeeController::class, 'showEmployeeProfile'])
+            ->name('employee.profile');
+        Route::post('/{userId}', [UserEmployeeController::class, 'updateEmployeeProfile'])
+            ->name('employee.profile_update');
+    });
     
     // Logout Route
     Route::post('/sign-out', function() {

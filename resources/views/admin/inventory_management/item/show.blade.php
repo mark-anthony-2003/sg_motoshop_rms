@@ -2,7 +2,7 @@
 
 @section('content')
     <div class="app-content-header">
-        <div class="container-fluid">
+        <div class="container">
             <div class="row">
                 <div class="col-sm-6">
                     <h3 class="mb-0">Item Detail</h3>
@@ -18,7 +18,7 @@
     </div>
 
     <div class="app-content">
-        <div class="container-fluid">
+        <div class="container">
             <div class="row justify-content-center">
                 <div class="col-md-8">
                     <div class="card shadow">
@@ -36,7 +36,7 @@
                                     <p><strong>Price:</strong> ₱{{ number_format($item->price, 2) }}</p>
                                     <p><strong>Stocks:</strong> {{ $item->stocks ?? 'Not Specified' }}</p>
                                     <p>
-                                        <strong>Product Status:</strong>
+                                        <strong>Item Status:</strong>
                                         <span class="badge {{ $item->item_status === 'in_stock' ? 'text-bg-success' : 'text-bg-danger' }}">
                                             {{ ucfirst(str_replace('_', ' ', $item->item_status)) }}
                                         </span>

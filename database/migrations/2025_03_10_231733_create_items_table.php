@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('item_image')->nullable();
             $table->integer('price');
             $table->integer('stocks');
-            $table->integer('quantity')->nullable();
+            $table->integer('sold')->nullable();
             $table->enum('item_status', ['in_stock', 'out_of_stock'])->default('in_stock');
             $table->timestamps();
         });

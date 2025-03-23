@@ -14,7 +14,8 @@ class Cart extends Model
     protected $primaryKey = 'cart_id';
 
     protected $fillable = [
-        'item_id'
+        'item_id',
+        'quantity'
     ];
 
     public function items(): HasMany

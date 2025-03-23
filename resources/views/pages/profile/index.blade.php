@@ -4,15 +4,29 @@
     <div class="app-content-header">
         <div class="container">
             <div class="row align-items-center">
-                <div class="col-sm-1 text-center">
-                    <div class="rounded-circle bg-secondary text-white d-flex justify-content-center align-items-center"
-                        style="width: 80px; height: 80px; font-size: 24px;">
-                        {{ strtoupper($user->first_name[0]) }}{{ strtoupper($user->last_name[0]) }}
+                <div class="col-sm-2 text-center">
+                    <div class="rounded-circle d-flex justify-content-center align-items-center overflow-hidden"
+                        style="width: 100px; height: 100px; font-size: 24px; background-color: #6c757d; color: white;">
+                        @if($user->user_image)
+                            <img src="{{ asset('storage/' . $user->user_image) }}" alt="User Image" class="img-fluid" style="width: 100%; height: 100%; object-fit: cover;">
+                        @else
+                            {{ strtoupper($user->first_name[0]) }}{{ strtoupper($user->last_name[0]) }}
+                        @endif
                     </div>
                 </div>
-                <div class="col-sm-11">
-                    <h2>{{ ucfirst(strtolower($user->first_name)) }} {{ ucfirst(strtolower($user->last_name)) }}</h2>
+                <div class="col-sm-10">
+                    <h2>{{ Str::title($user->first_name) }} {{ Str::title($user->last_name) }}</h2>
                     <p>{{ $user->email }}</p>
+                    @if($user->addresses->first())
+                        <p>
+                            {{ $user->addresses->first()->barangay ?? 'N/A' }},
+                            {{ $user->addresses->first()->city ?? 'N/A' }},
+                            {{ $user->addresses->first()->province ?? 'N/A' }},
+                            {{ $user->addresses->first()->country ?? 'N/A' }}
+                        </p>
+                    @else
+                        <p>No address available</p>
+                    @endif
                 </div>
             </div>
         </div>
@@ -53,9 +67,6 @@
                                     <div class="col-md-4">
                                         <label for="user_image" class="form-label">Profile Image</label>
                                         <input type="file" name="user_image" class="form-control">
-                                        @if($user->user_image)
-                                            <img src="{{ asset('storage/' . $user->user_image) }}" alt="User Image" width="100">
-                                        @endif
                                     </div>
                                     <div class="col-md-4">
                                         <label for="first_name" class="form-label">First Name</label>
@@ -121,9 +132,9 @@
                                     <div class="col-md-4">
                                         <label for="address_type" class="form-label">Address Type</label>
                                         <select name="address_type" id="address_type" class="form-control">
-                                            <option value="{{ old('address_type', $user->addresses->first()->address_type ?? '') }}" selected>
-                                                {{ ucfirst(old('address_type', $user->addresses->first()->address_type ?? 'Select Address Type')) }}
-                                            </option>
+                                            <option value="">Select Address Type</option>
+                                            <option value="home" {{ old('address_type', $user->addresses->first()->address_type ?? '') == 'home' ? 'selected' : '' }}>Home</option>
+                                            <option value="work" {{ old('address_type', $user->addresses->first()->address_type ?? '') == 'work' ? 'selected' : '' }}>Work</option>
                                         </select>
                                     </div>
                                 </div>
@@ -153,104 +164,70 @@
 
 
     <script>
-        // $(document).ready(function () {
-        //     $('#province').append('<option>Loading...</option>')
-
-        //     // Fetch Provinces
-        //     $.get('/address/provinces', function(data) {
-        //         $('#province').empty().append('<option>Select State/Province</option>')
-        //         data.forEach(function(item) {
-        //             $('#province').append(`<option value="${item.code}" data-code="${item.code}">${item.name}</option>`)
-        //         })
-        //     }).fail(function() {
-        //         alert("Failed to load provinces.")
-        //     });
-
-        //     // Fetch Cities
-        //     $('#province').change(function () {
-        //         var provinceCode = $(this).val()
-        //         $('#city').html('<option>Loading...</option>')
-        //         $('#barangay').html('<option>Select Barangay</option>')
-
-        //         $.get(`/address/cities/${provinceCode}`, function(data) {
-        //             $('#city').empty().append('<option>Select City/Town/Municipality</option>')
-        //             data.forEach(function(item) {
-        //                 $('#city').append(`<option value="${item.code}" data-code="${item.code}">${item.name}</option>`)
-        //             })
-        //         }).fail(function() {
-        //             alert("Failed to load cities.")
-        //         });
-        //     });
-
-        //     // Fetch Barangays
-        //     $('#city').change(function() {
-        //         var cityCode = $(this).val()
-        //         $('#barangay').html('<option>Loading...</option>')
-
-        //         $.get(`/address/barangays/${cityCode}`, function(data) {
-        //             $('#barangay').empty().append('<option>Select Barangay</option>')
-        //             data.forEach(function(item) {
-        //                 $('#barangay').append(`<option value="${item.name}">${item.name}</option>`)
-        //             })
-        //         }).fail(function() {
-        //             alert("Failed to load barangays.")
-        //         })
-        //     })
-        // })
         $(document).ready(function () {
-            const userProvince = "{{ old('province', $user->addresses->first()->province ?? '') }}"
-            const userCity = "{{ old('city', $user->addresses->first()->city ?? '') }}"
-            const userBarangay = "{{ old('barangay', $user->addresses->first()->barangay ?? '') }}"
+            const userProvince = "{{ old('province', $user->addresses->first()->province ?? '') }}";
+            const userCity = "{{ old('city', $user->addresses->first()->city ?? '') }}";
+            const userBarangay = "{{ old('barangay', $user->addresses->first()->barangay ?? '') }}";
 
             // Fetch Provinces
             $.get('/address/provinces', function(data) {
-                $('#province').empty().append('<option>Select State/Province</option>')
+                $('#province').empty().append('<option>Select State/Province</option>');
                 data.forEach(function(item) {
-                    const selected = item.code == userProvince ? 'selected' : ''
-                    $('#province').append(`<option value="${item.code}" ${selected}>${item.name}</option>`)
+                    const selected = item.name == userProvince ? 'selected' : '';
+                    $('#province').append(`<option value="${item.name}" data-code="${item.code}" ${selected}>${item.name}</option>`);
                 });
+
+                if (userProvince) $('#province').trigger('change');
             }).fail(function() {
-                alert("Failed to load provinces.")
+                alert("Failed to load provinces.");
             });
 
             // Fetch Cities on Province Change
             $('#province').change(function () {
-                const provinceCode = $(this).val()
-                $('#city').html('<option>Loading...</option>')
-                $('#barangay').html('<option>Select Barangay</option>')
+                const provinceCode = $('#province option:selected').data('code'); // Fetch code via data-attribute
+                const provinceName = $(this).val();
+                
+                $('input[name="province"]').val(provinceName); // Ensure name is sent
+
+                $('#city').html('<option>Loading...</option>');
+                $('#barangay').html('<option>Select Barangay</option>');
+
+                if (!provinceCode) return;
 
                 $.get(`/address/cities/${provinceCode}`, function(data) {
-                    $('#city').empty().append('<option>Select City/Town/Municipality</option>')
+                    $('#city').empty().append('<option>Select City/Town/Municipality</option>');
                     data.forEach(function(item) {
-                        const selected = item.code == userCity ? 'selected' : ''
-                        $('#city').append(`<option value="${item.code}" ${selected}>${item.name}</option>`);
+                        const selected = item.name == userCity ? 'selected' : '';
+                        $('#city').append(`<option value="${item.name}" data-code="${item.code}" ${selected}>${item.name}</option>`);
                     });
+
+                    if (userCity) $('#city').trigger('change');
                 }).fail(function() {
-                    alert("Failed to load cities.")
+                    alert("Failed to load cities.");
                 });
             });
-
-            // Trigger city load if a province is already selected
-            if (userProvince) {
-                $('#province').trigger('change')
-            }
 
             // Fetch Barangays on City Change
             $('#city').change(function() {
-                const cityCode = $(this).val()
-                $('#barangay').html('<option>Loading...</option>')
+                const cityCode = $('#city option:selected').data('code'); // Fetch code via data-attribute
+                const cityName = $(this).val();
+                
+                $('input[name="city"]').val(cityName); // Ensure name is sent
+
+                $('#barangay').html('<option>Loading...</option>');
+
+                if (!cityCode) return;
 
                 $.get(`/address/barangays/${cityCode}`, function(data) {
-                    $('#barangay').empty().append('<option>Select Barangay</option>')
+                    $('#barangay').empty().append('<option>Select Barangay</option>');
                     data.forEach(function(item) {
-                        const selected = item.code == userBarangay ? 'selected' : ''
-                        $('#barangay').append(`<option value="${item.code}" ${selected}>${item.name}</option>`)
+                        const selected = item.name == userBarangay ? 'selected' : '';
+                        $('#barangay').append(`<option value="${item.name}" ${selected}>${item.name}</option>`);
                     });
                 }).fail(function() {
-                    alert("Failed to load barangays.")
+                    alert("Failed to load barangays.");
                 });
             });
         });
-
     </script>
 @endsection

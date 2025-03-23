@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Models\Cart;
 use Illuminate\Http\Request;
 
 class UserCustomerController extends Controller
@@ -16,7 +17,7 @@ class UserCustomerController extends Controller
     public function showCustomerProfile($userId)
     {
         $user = User::findOrFail($userId);
-        return view('pages.user_profile.index', compact('user'));
+        return view('pages.profile.index', compact('user'));
     }
 
     public function updateCustomerProfile(Request $request, $customerId)
@@ -28,7 +29,12 @@ class UserCustomerController extends Controller
             'last_name'     => 'required|string|max:225',
             'date_of_birth' => 'nullable|date',
             'contact_no'    => 'nullable|string|max:20',
-            'user_image'    => 'nullable|image|mimes:png,jpg|max:5000'
+            'user_image'    => 'nullable|image|mimes:png,jpg|max:5000',
+            'country'       => 'required|string|max:100',
+            'province'      => 'required|string|max:100',
+            'city'          => 'required|string|max:100',
+            'barangay'      => 'required|string|max:100',
+            'address_type'  => 'required|in:home,work'
         ]);
 
         $userImagePath = $customer->user_image;
@@ -43,7 +49,23 @@ class UserCustomerController extends Controller
             'contact_no'    => $validated['contact_no'] ?? $customer->contact_no,
             'user_image'    => $userImagePath
         ]);
+        $customer->addresses()->updateOrCreate(
+            ['address_type' => $validated['address_type']],
+            [
+                'barangay' => $validated['barangay'],
+                'city'     => $validated['city'],
+                'province' => $validated['province'],
+                'country'  => $validated['country'],
+            ]
+        );
 
         return redirect()->route('customer.profile', $customerId)->with('success', 'Profile updated successfully!');
+    }
+
+    public function showCustomerOrderItems()
+    {
+        $orderItems = Cart::all();
+        // dd($orderItems);
+        return view('pages.profile.index', compact('orderItems'));
     }
 }

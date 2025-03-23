@@ -2,7 +2,7 @@
     <div class="container-fluid">
         <ul class="navbar-nav">
             <li class="nav-item">
-                <a href="{{ route('home-page') }}" class="nav-link">Logo</a>
+                <a href="{{ route('home-page') }}" class="nav-link fw-bold">SG</a>
             </li>
             @if (auth()->check() && (auth()->check() && auth()->user()->user_type === 'admin'))
                 <li class="nav-item">
@@ -18,14 +18,10 @@
                 (auth()->check() && auth()->user()->user_type === 'customer') ||
                 (auth()->check() && auth()->user()->user_type === 'employee'))
                 <li class="nav-item d-none d-md-block">
-                    <a href="#" class="nav-link">
-                        Products
-                    </a>
+                    <a href="{{ route('shop.items') }}" class="nav-link">Items</a>
                 </li>
                 <li class="nav-item d-none d-md-block">
-                    <a href="#" class="nav-link">
-                        Services
-                    </a>
+                    <a href="#" class="nav-link">Services</a>
                 </li>
             @endif
             @auth
