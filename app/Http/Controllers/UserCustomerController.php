@@ -17,7 +17,9 @@ class UserCustomerController extends Controller
     public function showCustomerProfile($userId)
     {
         $user = User::findOrFail($userId);
-        return view('pages.profile.index', compact('user'));
+        $carts = Cart::where('user_id', $userId)->with('items')->get();
+
+        return view('pages.profile.index', compact('user', 'carts'));
     }
 
     public function updateCustomerProfile(Request $request, $customerId)
@@ -62,10 +64,4 @@ class UserCustomerController extends Controller
         return redirect()->route('customer.profile', $customerId)->with('success', 'Profile updated successfully!');
     }
 
-    public function showCustomerOrderItems()
-    {
-        $orderItems = Cart::all();
-        // dd($orderItems);
-        return view('pages.profile.index', compact('orderItems'));
-    }
 }

@@ -131,13 +131,10 @@ Route::middleware('auth')->group(function() {
     // Customer Routes
     Route::prefix('customer')->group(function() {
         // Profile Settings
-        Route::get('/{userId}', [UserCustomerController::class, 'showCustomerProfile'])
+        Route::get('/{userId}/profile', [UserCustomerController::class, 'showCustomerProfile'])
             ->name('customer.profile');
-        Route::post('/{userId}', [UserCustomerController::class, 'updateCustomerProfile'])
+        Route::post('/{userId}/profile', [UserCustomerController::class, 'updateCustomerProfile'])
             ->name('customer.profile_update');
-        // Order Items
-        Route::get('/{userId}', [UserCustomerController::class, 'showCustomerOrderItems'])
-            ->name('customer.orderItems');
     });
 
     Route::prefix('shop')->group(function() {

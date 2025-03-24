@@ -3,9 +3,9 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Cart extends Model
 {
@@ -15,12 +15,17 @@ class Cart extends Model
 
     protected $fillable = [
         'item_id',
+        'user_id',
         'quantity'
     ];
 
-    public function items(): HasMany
+    public function items(): BelongsTo
     {
-        return $this->hasMany(Item::class);
+        return $this->belongsTo(Item::class);
+    }
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'user_id');
     }
     public function cart(): HasOne
     {

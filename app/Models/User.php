@@ -80,6 +80,10 @@ class User extends Authenticatable
     {
         return $this->hasMany(ServiceTransaction::class);
     }
+    public function carts()
+    {
+        return $this->hasMany(Cart::class, 'user_id');
+    }
     public function product(): BelongsTo
     {
         return $this->belongsTo(Product::class);

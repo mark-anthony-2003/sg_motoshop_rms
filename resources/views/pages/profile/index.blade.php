@@ -148,7 +148,41 @@
                         <!-- Orders History -->
                         <div class="tab-pane fade" id="v-pills-orders" role="tabpanel" aria-labelledby="v-pills-orders-tab">
                             <h4>Orders History</h4>
-                            <p>View your past orders here.</p>
+                            <div class="card-body">
+                                <table class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th style="width: 10px">No#</th>
+                                            <th>Image</th>
+                                            <th>Item Name</th>
+                                            <th>Price</th>
+                                            <th>Quantity</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @forelse($carts as $index => $cart)
+                                            <tr class="align-middle">
+                                                <td>{{ $index + 1 }}</td>
+                                                <td>
+                                                    @if ($cart->item && $cart->item->item_image)
+                                                        <img src="{{ asset('storage/' . $cart->item->item_image) }}" alt="{{ $cart->item->item_name }}" width="70">
+                                                    @else
+                                                        No Image Available
+                                                    @endif
+                                                </td>
+                                                <td>{{ optional($cart->items)->item_name ?? 'Item Not Found' }}</td>
+                                                <td>{{ optional($cart->items)->price ? number_format($cart->items->price, 2) : 'N/A' }}</td>
+                                                <td>{{ $cart->quantity }}</td>
+                                            </tr>
+                                        @empty
+                                            <tr>
+                                                <td colspan="6" class="text-center">No Order Items</td>
+                                            </tr>
+                                        @endforelse
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
 
                         <!-- Reservations History -->

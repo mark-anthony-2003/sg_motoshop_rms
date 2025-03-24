@@ -26,6 +26,7 @@ class OrderItemController extends Controller
         if ($orderItemId->item_status === 'in_stock' && $quantity > 0) {
             Cart::create([
                 'item_id' => $orderItemId->item_id,
+                'user_id' => auth()->user()->user_id,
                 'quantity' => $quantity,
             ]);
             $orderItemId->decrement('stocks', $quantity);
