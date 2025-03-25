@@ -19,9 +19,9 @@ class Cart extends Model
         'quantity'
     ];
 
-    public function items(): BelongsTo
+    public function item(): BelongsTo
     {
-        return $this->belongsTo(Item::class);
+        return $this->belongsTo(Item::class, 'item_id');
     }
     public function user(): BelongsTo
     {

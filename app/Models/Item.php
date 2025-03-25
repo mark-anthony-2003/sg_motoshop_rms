@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Item extends Model
 {
@@ -21,8 +21,8 @@ class Item extends Model
         'item_status'
     ];
 
-    public function cart(): BelongsTo
+    public function cart(): HasMany
     {
-        return $this->belongsTo(Cart::class);
+        return $this->hasMany(Cart::class, 'item_id');
     }
 }
