@@ -16,7 +16,8 @@ class OrderItemController extends Controller
 
     public function showItemCardDetail(Item $orderItemId)
     {
-        return view('pages.items.order_item', compact('orderItemId'));
+        $popularItems = Item::orderBy('sold', 'desc')->take(6)->get();
+        return view('pages.items.order_item', compact('orderItemId', 'popularItems'));
     }
 
     public function addToCartItem(Request $request, Item $orderItemId)

@@ -36,8 +36,8 @@ class UserFactory extends Factory
             'password'          => static::$password ??= Hash::make('password'),
             'contact_no'        => fake()->phoneNumber(),
             'date_of_birth'     => fake()->date(),
-            'user_type' => 'customer', // defualt as customer (can be overrideen)
-            'account_status'    => 'active', // default status
+            'user_type'         => 'customer',
+            'account_status'    => 'active',
             'remember_token'    => Str::random(10),
         ];
     }

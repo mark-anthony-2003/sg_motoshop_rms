@@ -37,7 +37,7 @@
                     </a>
 
                     <ul class="dropdown-menu dropdown-menu-end shadow" style="min-width: 300px;" id="cartDropdown">
-                        <form action="" method="POST">
+                        <form action="{{ route('shop.orderSummary') }}" method="POST">
                             @csrf
                             {{-- Cart Items --}}
                             @forelse($carts as $cart)
@@ -66,12 +66,12 @@
                                             <button 
                                                 type="button"
                                                 class="btn btn-outline-secondary btn-sm"
-                                                onclick="changeQuantity('{{ $cart->item_id }}', -1)"
+                                                onclick="changeCartQuantity('{{ $cart->item_id }}', -1)"
                                                 {{ $cart->item->item_status === 'out_of_stock' ? 'disabled' : '' }}>-</button>
 
                                             <input 
                                                 type="number"
-                                                id="quantity-{{ $cart->item_id }}"
+                                                id="quantity-{{ $cart->item->item_id }}"
                                                 name="quantities[{{ $cart->item->item_id }}]"
                                                 class="form-control text-center quantity-input"
                                                 style="max-width: 70px;"
@@ -84,7 +84,7 @@
                                             <button 
                                                 type="button"
                                                 class="btn btn-outline-secondary btn-sm"
-                                                onclick="changeQuantity('{{ $cart->item_id }}', 1)"
+                                                onclick="changeCartQuantity('{{ $cart->item_id }}', 1)"
                                                 {{ $cart->item->item_status === 'out_of_stock' ? 'disabled' : '' }}>+</button>
                                         </div>
                                     </div>
@@ -188,7 +188,7 @@
             input.addEventListener('input', updateCartSummary)
         })
 
-        window.changeQuantity = function(itemId, change) {
+        window.changeCartQuantity = function(itemId, change) {
             const quantityInput = document.getElementById(`quantity-${itemId}`)
             if (!quantityInput) return
 

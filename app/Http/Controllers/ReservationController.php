@@ -10,4 +10,11 @@ class ReservationController extends Controller
     {
         return view('pages.reservation.index');
     }
+
+    public function createReservation(Request $request)
+    {
+        // 
+
+        return view('pages.reservation.index');
+    }
 }

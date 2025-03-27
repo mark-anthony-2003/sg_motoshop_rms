@@ -9,6 +9,7 @@ use App\Http\Controllers\UserSignInController;
 use App\Http\Controllers\UserSignUpController;
 use App\Http\Controllers\OrderItemController;
 use App\Http\Controllers\ReservationController;
+use App\Http\Controllers\ShipmentController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -145,10 +146,18 @@ Route::middleware('auth')->group(function() {
             ->name('shop.showOrderItem');
         Route::post('/items/{orderItemId}', [OrderItemController::class, 'addToCartItem'])
             ->name('shop.addToCartItem');
+
+        // Orders
+        Route::post('/order-summary', [ShipmentController::class, 'checkoutItems'])
+            ->name('shop.orderSummary');
+        Route::get('/order-summary', [ShipmentController::class, 'showOrderSummary'])
+            ->name('shop.showOrderSummary');
         
         // Reservation
         Route::get('/reservation', [ReservationController::class, 'showReservationForm'])
             ->name('shop.reservation');
+        // Route::post('/reservation', [ReservationController::class, 'createReservation'])
+        //     ->name('shop.makeReservation');
     });
 
     // Employee Routes

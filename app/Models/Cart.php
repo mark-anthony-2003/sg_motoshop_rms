@@ -28,9 +28,9 @@ class Cart extends Model
     {
         return $this->belongsTo(User::class, 'user_id');
     }
-    public function cart(): HasOne
+    public function shipment(): HasOne
     {
-        return $this->hasOne(Shipment::class);
+        return $this->hasOne(Shipment::class, 'cart_id');
     }
 
     protected static function booted()
