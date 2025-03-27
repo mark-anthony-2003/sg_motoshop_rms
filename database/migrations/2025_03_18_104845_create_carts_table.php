@@ -16,6 +16,7 @@ return new class extends Migration
             $table->uuid('user_id');
             $table->foreignId('item_id')->constrained('items', 'item_id')->onDelete('cascade');
             $table->integer('quantity')->nullable();
+            $table->integer('sub_total')->nullable();
             $table->timestamps();
 
             $table->foreign('user_id')->references('user_id')->on('users')->onDelete('cascade');

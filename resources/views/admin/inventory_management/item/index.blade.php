@@ -51,8 +51,8 @@
                                                     No Image Available
                                                 @endif
                                             </td>
-                                            <td>{{ $item->item_name }}</td>
-                                            <td>{{ number_format($item->price, 2) }}</td>
+                                            <td>{{ Str::title($item->item_name) }}</td>
+                                            <td>₱{{ number_format($item->price, 2) }}</td>
                                             <td>{{ $item->stocks }}</td>
                                             <td>
                                                 <span class="badge {{ $item->item_status === 'in_stock' ? 'text-bg-success' : 'text-bg-danger' }}">

@@ -1,5 +1,16 @@
 @extends('includes.app')
 
+<style>
+    #top-nav .nav-link,
+    #orders-nav .nav-link {
+        color: var(--bs-black); }
+
+    #top-nav .nav-link.active,
+    #orders-nav .nav-link.active {
+        background-color: #343a40;
+        color: var(--bs-light) !important; }
+</style>
+
 @section('content')
     <div class="app-content-header">
         <div class="container">
@@ -35,26 +46,19 @@
     <div class="app-content">
         <div class="container">
             <div class="row">
-                <!-- Left Sidebar - Vertical Tabs -->
-                <div class="col-md-3">
-                    <div class="nav flex-column nav-pills bg-light p-3 rounded" id="v-pills-tab" role="tablist">
-                        <a class="nav-link active" id="v-pills-settings-tab" data-bs-toggle="pill" href="#v-pills-settings"
-                           role="tab" aria-controls="v-pills-settings" aria-selected="true">
-                            <i class="bi bi-gear"></i> User Settings
-                        </a>
-                        <a class="nav-link" id="v-pills-orders-tab" data-bs-toggle="pill" href="#v-pills-orders"
-                           role="tab" aria-controls="v-pills-orders" aria-selected="false">
-                            <i class="bi bi-cart"></i> Orders History
-                        </a>
-                        <a class="nav-link" id="v-pills-reservations-tab" data-bs-toggle="pill" href="#v-pills-reservations"
-                           role="tab" aria-controls="v-pills-reservations" aria-selected="false">
-                            <i class="bi bi-calendar-check"></i> Reservations History
-                        </a>
-                    </div>
+                <div class="nav nav-pills bg-light p-3 rounded mb-2 d-flex gap-2" id="top-nav" role="tablist">
+                    <a class="nav-link active btn text-black" id="v-pills-settings-tab" data-bs-toggle="pill" href="#v-pills-settings" role="tab" aria-controls="v-pills-settings" aria-selected="true">
+                        <i class="bi bi-gear"></i> User Settings
+                    </a>
+                    <a class="nav-link btn text-black" id="v-pills-orders-tab" data-bs-toggle="pill" href="#v-pills-orders" role="tab" aria-controls="v-pills-orders" aria-selected="false">
+                        <i class="bi bi-cart"></i> Orders
+                    </a>
+                    <a class="nav-link btn text-black" id="v-pills-reservations-tab" data-bs-toggle="pill" href="#v-pills-reservations" role="tab" aria-controls="v-pills-reservations" aria-selected="false">
+                        <i class="bi bi-calendar-check"></i> Reservations History
+                    </a>
                 </div>
 
-                <!-- Right Content -->
-                <div class="col-md-9">
+                <div class="col-md-12 mb-4">
                     <div class="tab-content bg-white p-4 rounded shadow-sm" id="v-pills-tabContent">
                         <!-- User Settings -->
                         <div class="tab-pane fade show active" id="v-pills-settings" role="tabpanel" aria-labelledby="v-pills-settings-tab">
@@ -95,7 +99,7 @@
 
                                 <h4 class="my-3">Address</h4>
                                 <div class="row g-3">
-                                    <div class="col-md-6">
+                                    <div class="col-md-4">
                                         <label for="country" class="form-label">Country</label>
                                         <select name="country" id="country" class="form-control">
                                             <option value="{{ old('country', $user->addresses->first()->country ?? 'Philippines') }}" selected>
@@ -103,7 +107,7 @@
                                             </option>
                                         </select>
                                     </div>
-                                    <div class="col-md-6">
+                                    <div class="col-md-2">
                                         <label for="province" class="form-label">State/Province</label>
                                         <select name="province" id="province" class="form-control">
                                             <option value="{{ old('province', $user->addresses->first()->province ?? '') }}" selected>
@@ -111,9 +115,7 @@
                                             </option>
                                         </select>
                                     </div>
-                                </div>
-                                <div class="row g-3">
-                                    <div class="col-md-4">
+                                    <div class="col-md-2">
                                         <label for="city" class="form-label">City/Town/Municipality</label>
                                         <select name="city" id="city" class="form-control">
                                             <option value="{{ old('city', $user->addresses->first()->city ?? '') }}" selected>
@@ -121,7 +123,7 @@
                                             </option>
                                         </select>
                                     </div>
-                                    <div class="col-md-4">
+                                    <div class="col-md-2">
                                         <label for="barangay" class="form-label">Street/Barangay</label>
                                         <select name="barangay" id="barangay" class="form-control">
                                             <option value="{{ old('barangay', $user->addresses->first()->barangay ?? '') }}" selected>
@@ -129,7 +131,7 @@
                                             </option>
                                         </select>
                                     </div>
-                                    <div class="col-md-4">
+                                    <div class="col-md-2">
                                         <label for="address_type" class="form-label">Address Type</label>
                                         <select name="address_type" id="address_type" class="form-control">
                                             <option value="">Select Address Type</option>
@@ -145,43 +147,49 @@
                             </form>
                         </div>
 
-                        <!-- Orders History -->
+                        <!-- Orders -->
                         <div class="tab-pane fade" id="v-pills-orders" role="tabpanel" aria-labelledby="v-pills-orders-tab">
-                            <h4>Orders History</h4>
-                            <div class="card-body">
-                                <table class="table table-bordered">
-                                    <thead>
-                                        <tr>
-                                            <th style="width: 10px">No#</th>
-                                            <th>Image</th>
-                                            <th>Item Name</th>
-                                            <th>Price</th>
-                                            <th>Quantity</th>
-                                            <th>Actions</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        @forelse($carts as $index => $cart)
-                                            <tr class="align-middle">
-                                                <td>{{ $index + 1 }}</td>
-                                                <td>
-                                                    @if ($cart->item && $cart->item->item_image)
-                                                        <img src="{{ asset('storage/' . $cart->item->item_image) }}" alt="{{ $cart->item->item_name }}" width="70">
-                                                    @else
-                                                        No Image Available
-                                                    @endif
-                                                </td>
-                                                <td>{{ optional($cart->items)->item_name ?? 'Item Not Found' }}</td>
-                                                <td>{{ optional($cart->items)->price ? number_format($cart->items->price, 2) : 'N/A' }}</td>
-                                                <td>{{ $cart->quantity }}</td>
-                                            </tr>
-                                        @empty
-                                            <tr>
-                                                <td colspan="6" class="text-center">No Order Items</td>
-                                            </tr>
-                                        @endforelse
-                                    </tbody>
-                                </table>
+                            <h4>Orders</h4>
+
+                            <div class="nav nav-pills bg-light p-3 rounded mb-2 d-flex gap-2" id="orders-nav" role="tablist">
+                                <a class="nav-link active btn text-black" id="v-pills-all-tab" data-bs-toggle="pill" href="#v-pills-all" role="tab" aria-controls="v-pills-all" aria-selected="true">
+                                    All
+                                </a>
+                                <a class="nav-link btn text-black" id="v-pills-unpaid-tab" data-bs-toggle="pill" href="#v-pills-unpaid" role="tab" aria-controls="v-pills-unpaid" aria-selected="false">
+                                    Unpaid
+                                </a>
+                                <a class="nav-link btn text-black" id="v-pills-toship-tab" data-bs-toggle="pill" href="#v-pills-toship" role="tab" aria-controls="v-pills-toship" aria-selected="false">
+                                    To Ship
+                                </a>
+                                <a class="nav-link btn text-black" id="v-pills-shipped-tab" data-bs-toggle="pill" href="#v-pills-shipped" role="tab" aria-controls="v-pills-shipped" aria-selected="false">
+                                    Shipped
+                                </a>
+                                <a class="nav-link btn text-black" id="v-pills-returns-tab" data-bs-toggle="pill" href="#v-pills-returns" role="tab" aria-controls="v-pills-returns" aria-selected="false">
+                                    Returns
+                                </a>
+                            </div>
+                            {{-- Orders Content --}}
+                            <div class="tab-content">
+                                {{-- All --}}
+                                <div class="tab-pane fade show active" id="v-pills-all" role="tabpanel" aria-labelledby="v-pills-all-tab">
+                                    <p class="text-center py-4">No Orders Yet</p>
+                                </div>
+                                {{-- Unpaid --}}
+                                <div class="tab-pane fade" id="v-pills-unpaid" role="tabpanel" aria-labelledby="v-pills-unpaid-tab">
+                                    <p class="text-center py-4">No Orders Yet</p>
+                                </div>
+                                {{-- To Ship --}}
+                                <div class="tab-pane fade" id="v-pills-toship" role="tabpanel" aria-labelledby="v-pills-toship-tab">
+                                    <p class="text-center py-4">No Orders Yet</p>
+                                </div>
+                                {{-- Shipped --}}
+                                <div class="tab-pane fade" id="v-pills-shipped" role="tabpanel" aria-labelledby="v-pills-shipped-tab">
+                                    <p class="text-center py-4">No Orders Yet</p>
+                                </div>
+                                {{-- Returns --}}
+                                <div class="tab-pane fade" id="v-pills-returns" role="tabpanel" aria-labelledby="v-pills-returns-tab">
+                                    <p class="text-center py-4">No Orders Yet</p>
+                                </div>
                             </div>
                         </div>
 
@@ -199,69 +207,66 @@
 
     <script>
         $(document).ready(function () {
-            const userProvince = "{{ old('province', $user->addresses->first()->province ?? '') }}";
-            const userCity = "{{ old('city', $user->addresses->first()->city ?? '') }}";
-            const userBarangay = "{{ old('barangay', $user->addresses->first()->barangay ?? '') }}";
+            const userProvince = "{{ old('province', $user->addresses->first()->province ?? '') }}"
+            const userCity = "{{ old('city', $user->addresses->first()->city ?? '') }}"
+            const userBarangay = "{{ old('barangay', $user->addresses->first()->barangay ?? '') }}"
 
             // Fetch Provinces
             $.get('/address/provinces', function(data) {
-                $('#province').empty().append('<option>Select State/Province</option>');
+                $('#province').empty().append('<option>Select State/Province</option>')
                 data.forEach(function(item) {
-                    const selected = item.name == userProvince ? 'selected' : '';
-                    $('#province').append(`<option value="${item.name}" data-code="${item.code}" ${selected}>${item.name}</option>`);
-                });
+                    const selected = item.name == userProvince ? 'selected' : ''
+                    $('#province').append(`<option value="${item.name}" data-code="${item.code}" ${selected}>${item.name}</option>`)
+                })
 
-                if (userProvince) $('#province').trigger('change');
-            }).fail(function() {
-                alert("Failed to load provinces.");
-            });
+                if (userProvince) $('#province').trigger('change')
+            })
+            // .fail(function() {
+            //     alert("Failed to load provinces.");
+            // });
 
             // Fetch Cities on Province Change
             $('#province').change(function () {
-                const provinceCode = $('#province option:selected').data('code'); // Fetch code via data-attribute
-                const provinceName = $(this).val();
+                const provinceCode = $('#province option:selected').data('code')
+                const provinceName = $(this).val()
                 
-                $('input[name="province"]').val(provinceName); // Ensure name is sent
+                $('input[name="province"]').val(provinceName)
 
-                $('#city').html('<option>Loading...</option>');
-                $('#barangay').html('<option>Select Barangay</option>');
+                $('#city').html('<option>Loading...</option>')
+                $('#barangay').html('<option>Select Barangay</option>')
 
-                if (!provinceCode) return;
+                if (!provinceCode) return
 
                 $.get(`/address/cities/${provinceCode}`, function(data) {
-                    $('#city').empty().append('<option>Select City/Town/Municipality</option>');
+                    $('#city').empty().append('<option>Select City/Town/Municipality</option>')
                     data.forEach(function(item) {
-                        const selected = item.name == userCity ? 'selected' : '';
-                        $('#city').append(`<option value="${item.name}" data-code="${item.code}" ${selected}>${item.name}</option>`);
-                    });
+                        const selected = item.name == userCity ? 'selected' : ''
+                        $('#city').append(`<option value="${item.name}" data-code="${item.code}" ${selected}>${item.name}</option>`)
+                    })
 
-                    if (userCity) $('#city').trigger('change');
-                }).fail(function() {
-                    alert("Failed to load cities.");
-                });
-            });
+                    if (userCity) $('#city').trigger('change')
+                })
+            })
 
             // Fetch Barangays on City Change
             $('#city').change(function() {
-                const cityCode = $('#city option:selected').data('code'); // Fetch code via data-attribute
-                const cityName = $(this).val();
+                const cityCode = $('#city option:selected').data('code')
+                const cityName = $(this).val()
                 
-                $('input[name="city"]').val(cityName); // Ensure name is sent
+                $('input[name="city"]').val(cityName)
 
-                $('#barangay').html('<option>Loading...</option>');
+                $('#barangay').html('<option>Loading...</option>')
 
-                if (!cityCode) return;
+                if (!cityCode) return
 
                 $.get(`/address/barangays/${cityCode}`, function(data) {
-                    $('#barangay').empty().append('<option>Select Barangay</option>');
+                    $('#barangay').empty().append('<option>Select Barangay</option>')
                     data.forEach(function(item) {
-                        const selected = item.name == userBarangay ? 'selected' : '';
-                        $('#barangay').append(`<option value="${item.name}" ${selected}>${item.name}</option>`);
-                    });
-                }).fail(function() {
-                    alert("Failed to load barangays.");
-                });
-            });
-        });
+                        const selected = item.name == userBarangay ? 'selected' : ''
+                        $('#barangay').append(`<option value="${item.name}" ${selected}>${item.name}</option>`)
+                    })
+                })
+            })
+        })
     </script>
 @endsection

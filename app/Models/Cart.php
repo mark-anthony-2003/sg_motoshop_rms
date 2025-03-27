@@ -16,7 +16,8 @@ class Cart extends Model
     protected $fillable = [
         'item_id',
         'user_id',
-        'quantity'
+        'quantity',
+        'sub_total'
     ];
 
     public function item(): BelongsTo
@@ -30,5 +31,14 @@ class Cart extends Model
     public function cart(): HasOne
     {
         return $this->hasOne(Shipment::class);
+    }
+
+    protected static function booted()
+    {
+        static::saving(function ($cart) {
+            if ($cart->item) {
+                $cart->sub_total = $cart->item->price * $cart->quantity;
+            }
+        });
     }
 }

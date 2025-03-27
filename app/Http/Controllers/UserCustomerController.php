@@ -17,13 +17,7 @@ class UserCustomerController extends Controller
     public function showCustomerProfile($userId)
     {
         $user = User::findOrFail($userId);
-        $carts = Cart::where('user_id', $userId)->with('item')->get();
-        
-        foreach ($carts as $cart) {
-            dump($cart->item->item_name);
-        }
-
-        return view('pages.profile.index', compact('user', 'carts'));
+        return view('pages.profile.index', compact('user'));
     }
 
     public function updateCustomerProfile(Request $request, $customerId)

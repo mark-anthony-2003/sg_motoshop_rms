@@ -36,14 +36,6 @@
                                 <div class="mb-3">
                                     <label for="item_image" class="form-label">Item Image:</label>
                                     <input type="file" name="item_image" id="item_image" class="form-control">
-                                    @if (isset($item) && $item->item_image)
-                                        <div>
-                                            <img src="{{ asset('storage/' . $item->item_image) }}" alt="{{ $item->item_name }}" width="80">
-                                        </div>
-                                    @endif
-                                    @error('item_image')
-                                        <p style="color: red;">{{ $message }}</p>
-                                    @enderror
                                 </div>
                                 <div class="mb-3">
                                     <label for="price" class="form-label">Price:</label>
