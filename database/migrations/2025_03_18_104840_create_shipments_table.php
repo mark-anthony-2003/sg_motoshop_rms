@@ -13,8 +13,9 @@ return new class extends Migration
     {
         Schema::create('shipments', function (Blueprint $table) {
             $table->id('shipment_id');
-            $table->foreignId('cart_id')->constrained('carts', 'cart_id')->onDelete('cascade');
+            $table->foreignId('cart_id')->constrained('carts', 'cart_id');
             $table->integer('total_amount');
+            $table->json('items');
             $table->enum('shipment_item_status', ['pending', 'completed', 'canceled'])->default('pending');
             $table->enum('shipment_method', ['courier', 'on_site_pickup'])->default('courier');
             $table->date('shipment_date');

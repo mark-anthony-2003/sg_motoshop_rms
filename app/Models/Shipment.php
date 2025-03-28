@@ -23,7 +23,7 @@ class Shipment extends Model
         'payment_status'
     ];
 
-    public function cart(): BelongsTo
+    public function carts(): BelongsTo
     {
         return $this->belongsTo(Cart::class, 'cart_id');
     }

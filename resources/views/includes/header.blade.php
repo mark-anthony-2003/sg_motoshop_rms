@@ -45,7 +45,7 @@
                                     <input 
                                         type="checkbox"
                                         name="selected_items[]"
-                                        value="{{ $cart->item_id }}"
+                                        value="{{ $cart->cart_id }}"
                                         class="form-check-input me-2 item-checkbox"
                                         id="cart-item-{{ $cart->item_id }}"
                                         data-price="{{ $cart->item->price }}"

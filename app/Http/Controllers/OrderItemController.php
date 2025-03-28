@@ -22,14 +22,26 @@ class OrderItemController extends Controller
 
     public function addToCartItem(Request $request, Item $orderItemId)
     {
-        $quantity = min($request->input('quantity'), $orderItemId->stocks);
+        $quantity = $request->input('quantity', 1);
+        $quantity = min($quantity, $orderItemId->stocks);
 
         if ($orderItemId->item_status === 'in_stock' && $quantity > 0) {
-            Cart::create([
-                'item_id' => $orderItemId->item_id,
-                'user_id' => auth()->user()->user_id,
-                'quantity' => $quantity,
-            ]);
+            $cart = Cart::where('item_id', $orderItemId->item_id)
+                ->where('user_id', auth()->user()->user_id)
+                ->first();
+            
+            if ($cart) {
+                $cart->increment('quantity', $quantity);
+                $cart->sub_total = $cart->quantity * $orderItemId->price;
+                $cart->save();
+            } else {
+                Cart::create([
+                    'item_id'   => $orderItemId->item_id,
+                    'user_id'   => auth()->user()->user_id,
+                    'quantity'  => $quantity,
+                    'sub_total' => $orderItemId->price * $quantity
+                ]);
+            }
             $orderItemId->decrement('stocks', $quantity);
 
             return redirect()->route('shop.items')->with('success', 'Item added to cart successfully!');

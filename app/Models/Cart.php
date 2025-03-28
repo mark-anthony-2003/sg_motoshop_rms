@@ -4,7 +4,6 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Cart extends Model
@@ -28,9 +27,9 @@ class Cart extends Model
     {
         return $this->belongsTo(User::class, 'user_id');
     }
-    public function shipment(): HasOne
+    public function shipment(): BelongsTo
     {
-        return $this->hasOne(Shipment::class, 'cart_id');
+        return $this->belongsTo(Shipment::class, 'shipment_id');
     }
 
     protected static function booted()

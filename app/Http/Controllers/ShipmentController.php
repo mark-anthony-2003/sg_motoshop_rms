@@ -11,7 +11,7 @@ class ShipmentController extends Controller
 {
     public function checkoutItems(Request $request)
     {
-        $selectedItems = $request->input('selectedItems', []);
+        $selectedItems = $request->input('selected_items', []);
         $quantities = $request->input('quantities', []);
 
         if (empty($selectedItems)) {
@@ -22,29 +22,52 @@ class ShipmentController extends Controller
             ->where('user_id', Auth::id())
             ->with('item')
             ->get();
+        
+        if ($carts->isEmpty()) {
+            return redirect()->back()->with('error', 'No valid items found in the cart.');
+        }
 
         $totalAmount = 0;
+        $shipmentItems = [];
+
         foreach ($carts as $cart) {
-            $cart->update(['quantity' => $quantities[$cart->item->item_id] ?? $cart->quantity]);
+            $item = $cart->item;
+
+            if (isset($quantities[$cart->cart_id])) {
+                $cart->quantity = $quantities[$cart->cart_id];
+                $cart->sub_total = $cart->quantity * $item->price;
+                $cart->save();
+
+                $item->decrement('stocks', $cart->quantity);
+
+                $shipmentItems[] = [
+                    'item_id'   => $item->item_id,
+                    'quantity'  => $cart->quantity,
+                    'sub_total' => $cart->sub_total
+                ];
+            }
             $totalAmount += $cart->sub_total;
         }
 
-        // store shipment details
         $shipment = Shipment::create([
-            'cart_id'           => $carts->first()->cart_id,
-            'total_amount'      => $totalAmount,
-            'shipment_status'   => 'pending',
-            'shipment_method'   => 'courier',
-            'payment_method'    => 'cash_on_delivery',
-            'payment_status'    => 'unpaid',
-            'shipment_date'     => now()
+            'cart_id'               => $carts->first()->cart_id,
+            'total_amount'          => $totalAmount,
+            'shipment_item_status'  => 'pending',
+            'shipment_method'       => 'courier',
+            'payment_method'        => 'cash_on_delivery',
+            'payment_status'        => 'pending',
+            'shipment_date'         => now(),
+            'items'                 => json_encode($selectedItems)
         ]);
 
-        return redirect()->route('shop.orderSummary', ['shipment' => $shipment->shipment_id]);
+        Cart::whereIn('cart_id', $selectedItems)->delete();
+
+        return redirect()->route('shop.orderSummary', ['shipment' => $shipment->shipment_id])
+            ->with('success', 'Order placed successfully');
     }
 
     public function showOrderSummary(Shipment $shipment)
     {
-        return view('shop.order_summary', compact('shipment'));
+        return view('pages.items.order_summary', compact('shipment'));
     }
 }
