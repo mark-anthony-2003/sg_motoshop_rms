@@ -51,10 +51,10 @@ class UserCustomerController extends Controller
         $customer->addresses()->updateOrCreate(
             ['address_type' => $validated['address_type']],
             [
-                'barangay' => $validated['barangay'],
-                'city'     => $validated['city'],
-                'province' => $validated['province'],
-                'country'  => $validated['country'],
+                'barangay'  => $validated['barangay'],
+                'city'      => $validated['city'],
+                'province'  => $validated['province'],
+                'country'   => $validated['country'],
             ]
         );
 

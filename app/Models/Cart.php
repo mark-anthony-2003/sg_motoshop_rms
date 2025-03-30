@@ -29,7 +29,7 @@ class Cart extends Model
     }
     public function shipment(): BelongsTo
     {
-        return $this->belongsTo(Shipment::class, 'shipment_id');
+        return $this->belongsTo(Shipment::class, 'cart_id', 'cart_id');
     }
 
     protected static function booted()

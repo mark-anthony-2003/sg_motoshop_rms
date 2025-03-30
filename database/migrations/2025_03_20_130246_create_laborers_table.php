@@ -13,7 +13,15 @@ return new class extends Migration
     {
         Schema::create('laborers', function (Blueprint $table) {
             $table->foreignId('position_type_id')->constrained('position_types', 'position_type_id')->onDelete('cascade');
-            $table->string('worker');
+            $table->enum('worker', [
+                'Mechanic', 
+                'Auto Electrician', 
+                'Transmission Specialist', 
+                'Welder', 
+                'Tire Technician',
+                'Oil Change Specialist'
+            ]);
+            $table->enum('employment_status', ['active', 'on_leave', 'resigned'])->default('active');
             $table->timestamps();
         });
     }

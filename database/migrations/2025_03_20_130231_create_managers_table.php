@@ -13,9 +13,9 @@ return new class extends Migration
     {
         Schema::create('managers', function (Blueprint $table) {
             $table->foreignId('position_type_id')->constrained('position_types', 'position_type_id')->onDelete('cascade');
-            $table->string('area_checker');
-            $table->string('inventory_recorder');
-            $table->string('payroll_assistant');
+            $table->boolean('area_checker')->default(true);
+            $table->boolean('inventory_recorder')->default(true);
+            $table->boolean('payroll_assistance')->default(true);
             $table->timestamps();
         });
     }

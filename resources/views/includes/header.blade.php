@@ -47,9 +47,9 @@
                                         name="selected_items[]"
                                         value="{{ $cart->cart_id }}"
                                         class="form-check-input me-2 item-checkbox"
-                                        id="cart-item-{{ $cart->item_id }}"
+                                        id="cart-item-{{ $cart->cart_id }}"
                                         data-price="{{ $cart->item->price }}"
-                                        data-id="{{ $cart->item_id }}">
+                                        data-id="{{ $cart->cart_id }}">
                                     <img 
                                         src="{{ asset('storage/' . $cart->item->item_image) }}"
                                         alt="{{ $cart->item->item_name }}"
@@ -66,25 +66,25 @@
                                             <button 
                                                 type="button"
                                                 class="btn btn-outline-secondary btn-sm"
-                                                onclick="changeCartQuantity('{{ $cart->item_id }}', -1)"
+                                                onclick="changeCartQuantity('{{ $cart->cart_id }}', -1)"
                                                 {{ $cart->item->item_status === 'out_of_stock' ? 'disabled' : '' }}>-</button>
 
                                             <input 
                                                 type="number"
-                                                id="quantity-{{ $cart->item->item_id }}"
-                                                name="quantities[{{ $cart->item->item_id }}]"
+                                                id="quantity-{{ $cart->cart_id }}"
+                                                name="quantities[{{ $cart->cart_id }}]"
                                                 class="form-control text-center quantity-input"
                                                 style="max-width: 70px;"
                                                 min="1"
                                                 max="{{ $cart->item->stocks }}"
                                                 value="{{ $cart->quantity }}"
-                                                data-id="{{ $cart->item_id }}"
+                                                data-id="{{ $cart->cart_id }}"
                                                 required>
 
                                             <button 
                                                 type="button"
                                                 class="btn btn-outline-secondary btn-sm"
-                                                onclick="changeCartQuantity('{{ $cart->item_id }}', 1)"
+                                                onclick="changeCartQuantity('{{ $cart->cart_id }}', 1)"
                                                 {{ $cart->item->item_status === 'out_of_stock' ? 'disabled' : '' }}>+</button>
                                         </div>
                                     </div>
@@ -188,8 +188,8 @@
             input.addEventListener('input', updateCartSummary)
         })
 
-        window.changeCartQuantity = function(itemId, change) {
-            const quantityInput = document.getElementById(`quantity-${itemId}`)
+        window.changeCartQuantity = function(cartId, change) {
+            const quantityInput = document.getElementById(`quantity-${cartId}`)
             if (!quantityInput) return
 
             let currentValue = parseInt(quantityInput.value) || 1
@@ -209,9 +209,9 @@
 
             itemCheckboxes.forEach(checkbox => {
                 if (checkbox.checked) {
-                    const itemId = checkbox.getAttribute('data-id')
+                    const cartId = checkbox.getAttribute('data-id')
                     const price = parseFloat(checkbox.getAttribute('data-price')) || 0
-                    const quantityInput = document.getElementById(`quantity-${itemId}`)
+                    const quantityInput = document.getElementById(`quantity-${cartId}`)
                     const quantity = parseInt(quantityInput.value) || 1
 
                     totalAmount += price * quantity
@@ -223,5 +223,6 @@
             checkoutButton.disabled = !isAnyChecked
             selectAllCheckbox.checked = itemCheckboxes.length > 0 && Array.from(itemCheckboxes).every(checkbox => checkbox.checked)
         }
+        updateCartSummary()
     })
 </script>

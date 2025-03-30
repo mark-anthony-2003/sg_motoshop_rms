@@ -16,16 +16,17 @@ class Shipment extends Model
     protected $fillable = [
         'cart_id',
         'total_amount',
-        'shipment_status',
+        'shipment_item_status',
         'shipment_method',
         'shipment_date',
         'payment_method',
-        'payment_status'
+        'payment_status',
+        'payment_reference'
     ];
 
-    public function carts(): BelongsTo
+    public function cart(): BelongsTo
     {
-        return $this->belongsTo(Cart::class, 'cart_id');
+        return $this->belongsTo(Cart::class, 'cart_id', 'cart_id');
     }
     public function products(): HasMany
     {

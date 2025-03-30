@@ -23,6 +23,11 @@ class DatabaseSeeder extends Seeder
             AdminUserSeeder::class,
             UserSeeder::class,
             ItemSeeder::class,
+            PositionTypeSeeder::class,
+            SalaryTypeSeeder::class,
+            EmployeeSeeder::class,
+            ManagerTypeSeeder::class,
+            LaborerTypeSeeder::class
         ]);
     }
 }

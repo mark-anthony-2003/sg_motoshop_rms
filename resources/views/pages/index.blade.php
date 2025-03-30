@@ -9,8 +9,8 @@
                     <p>Parts, Accessories, and Services</p>
 
                     <div class="d-flex gap-4 justify-content-center">
-                        <a href="{{ route('shop.items') }}" class="btn btn-primary btn-sm">Order Items</a>
-                        <a href="{{ route('shop.reservation') }}" class="btn btn-primary btn-sm">Make a Reservation</a>
+                        <a href="{{ route('shop.items') }}" class="btn btn-primary btn-md">Order Items</a>
+                        <a href="{{ route('shop.reservation') }}" class="btn btn-primary btn-md">Make a Reservation</a>
                     </div>
                 </div>
             </div>

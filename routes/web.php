@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AddressController;
+use App\Http\Controllers\AdyenWebhookController;
 use App\Http\Controllers\ItemController;
 use App\Http\Controllers\ServiceTypeController;
 use App\Http\Controllers\UserCustomerController;
@@ -8,6 +9,7 @@ use App\Http\Controllers\UserEmployeeController;
 use App\Http\Controllers\UserSignInController;
 use App\Http\Controllers\UserSignUpController;
 use App\Http\Controllers\OrderItemController;
+use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\ReservationController;
 use App\Http\Controllers\ShipmentController;
 use Illuminate\Support\Facades\Auth;
@@ -62,6 +64,14 @@ Route::middleware('guest')->group(function() {
         ->name('sign-up');
     Route::post('/sign-up', [UserSignUpController::class, 'signUp'])
         ->name('sign-up.submit');
+    
+    // Sign in as Employee
+    Route::get('/sign-in/employee/manager', [UserSignInController::class, 'showEmployeeManagerForm'])
+        ->name('sign-in.employee-manager');
+    Route::get('/sign-in/employee/laborer', [UserSignInController::class, 'showEmployeeLaborerForm'])
+        ->name('sign-in.employee-laborer');
+    Route::post('/sign-in/employee', [UserSignInController::class, 'employeeSignin'])
+        ->name('sign-in.employee-submit');
 });
 
 // Admin Routes (Admin Access)
@@ -116,6 +126,12 @@ Route::middleware(['auth', 'admin'])->group(function() {
     Route::prefix('employees')->group(function() {
         Route::get('/', [UserEmployeeController::class, 'showEmployeesTable'])
             ->name('employees-table');
+        Route::get('/{employeeInfo}', [UserEmployeeController::class, 'adminShowEmployeeInfo'])
+            ->name('show-employeeInfo');
+        Route::get('/{employeeInfo}/edit', [UserEmployeeController::class, 'adminEditEmployeeInfo'])
+            ->name('edit.employeeInfo');
+        Route::post('/{employeeInfo}/update', [UserEmployeeController::class, 'adminUpdateEmployeeInfo'])
+            ->name('update.employeeInfo');
     });
 
     // Logout Route
@@ -127,6 +143,17 @@ Route::middleware(['auth', 'admin'])->group(function() {
         return redirect()->route('sign-in.selection');
     })->name('sign-out');
 });
+
+Route::middleware(['employee'])->group(function () {
+    Route::get('/manager-home', function() {
+        return view('pages.auth.employee.manager_homepage');
+    })->name('manager-homepage');
+
+    Route::get('/laborer-home', function() {
+        return view('pages.auth.employee.laborer_homepage');
+    })->name('laborer-homepage');
+});
+
 
 Route::middleware('auth')->group(function() {
     // Customer Routes
@@ -148,10 +175,17 @@ Route::middleware('auth')->group(function() {
             ->name('shop.addToCartItem');
 
         // Orders
-        Route::post('/order-summary', [ShipmentController::class, 'checkoutItems'])
+        Route::post('/order-summary', [OrderItemController::class, 'checkoutCartItems'])
             ->name('shop.orderSummary');
-        Route::get('/order-summary', [ShipmentController::class, 'showOrderSummary'])
+        Route::get('/order-summary', [OrderItemController::class, 'showOrderSummary'])
             ->name('shop.showOrderSummary');
+
+        // Orders Payment
+        Route::post('/payment/gcash', [PaymentController::class, 'processPayment'])
+            ->name('payment.process');
+        Route::get('/payment/success', [PaymentController::class, 'paymentSuccess'])
+            ->name('payment.success');
+        Route::post('/webhook/adyen', [AdyenWebhookController::class, 'handle']);
         
         // Reservation
         Route::get('/reservation', [ReservationController::class, 'showReservationForm'])

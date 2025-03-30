@@ -23,7 +23,7 @@
                 <div class="col-12">
                     <div class="mb-4">
                         <div class="card-header d-flex justify-content-end align-items-right">
-                            <a href="{{ route('create-item') }}" class="btn btn-primary btn-sm">
+                            <a href="#" class="btn btn-primary btn-sm">
                                 <i class="bi bi-plus-circle"></i> New Employee
                             </a>
                         </div>
@@ -35,6 +35,7 @@
                                         <th>Image</th>
                                         <th>Name</th>
                                         <th>Email</th>
+                                        <th>Position</th>
                                         <th>Status</th>
                                         <th>Actions</th>
                                     </tr>
@@ -45,33 +46,34 @@
                                             <td>{{ $index+1 }}</td>
                                             <td>
                                                 @if ($employee->user_image)
-                                                    <img src="{{ asset('storage/' . $employee->user_image) }}" alt="{{ $employee->user_name }}" width="70">
+                                                    <img src="{{ asset('storage/' . $employee->user->user_image) }}" alt="{{ $employee->user->user_id }}" width="70">
                                                 @else
                                                     No Image Available
                                                 @endif
                                             </td>
-                                            <td>{{ $employee->first_name }} {{ $employee->last_name }}</td>
-                                            <td>{{ $employee->email }}</td>
+                                            <td>{{ $employee->user->first_name }} {{ $employee->user->last_name }}</td>
+                                            <td>{{ $employee->user->email }}</td>
+                                            <td>{{ Str::title($employee->positionType->position_type_name) }}</td>
                                             <td>
                                                 <span class="badge 
-                                                    {{ $employee->account_status === 'active' ? 'text-bg-success' : 
-                                                       ($employee->account_status === 'inactive' ? 'text-bg-warning' : 'text-bg-danger') }}">
-                                                    {{ strtoupper(ucfirst(str_replace('_', ' ', $employee->account_status))) }}
+                                                    {{ $employee->user->account_status === 'active' ? 'text-bg-success' : 
+                                                       ($employee->user->account_status === 'inactive' ? 'text-bg-warning' : 'text-bg-danger') }}">
+                                                    {{ strtoupper(ucfirst(str_replace('_', ' ', $employee->user->account_status))) }}
                                                 </span>
                                             </td>                                            
                                             <td class="text-center">
-                                                {{-- <a href="{{ route('show-item', $item->item_id) }}" class="btn btn-info btn-sm">
+                                                <a href="{{ route('show-employeeInfo', $employee->employee_id) }}" class="btn btn-info btn-sm">
                                                     <i class="bi bi-info-circle"></i>
                                                 </a>
-                                                <a href="{{ route('edit-item', $item->item_id) }}" class="btn btn-warning btn-sm">
+                                                <a href="{{ route('edit.employeeInfo', $employee->employee_id) }}" class="btn btn-warning btn-sm">
                                                     <i class="bi bi-pencil-square"></i>
                                                 </a>
-                                                <form action="{{ route('delete-item', $item) }}" method="POST" class="d-inline">
+                                                <form action="#" method="POST" class="d-inline">
                                                     @csrf
                                                     <button type="submit" class="btn btn-danger btn-sm">
                                                         <i class="bi bi-trash"></i>
                                                     </button>
-                                                </form> --}}
+                                                </form>
                                             </td>
                                         </tr>
                                     @empty

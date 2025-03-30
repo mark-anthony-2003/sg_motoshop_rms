@@ -30,10 +30,10 @@
                     <p>{{ $user->email }}</p>
                     @if($user->addresses->first())
                         <p>
-                            {{ $user->addresses->first()->barangay ?? 'N/A' }},
-                            {{ $user->addresses->first()->city ?? 'N/A' }},
-                            {{ $user->addresses->first()->province ?? 'N/A' }},
-                            {{ $user->addresses->first()->country ?? 'N/A' }}
+                            {{ $user->addresses->first()->barangay }},
+                            {{ $user->addresses->first()->city }},
+                            {{ $user->addresses->first()->province }},
+                            {{ $user->addresses->first()->country }}
                         </p>
                     @else
                         <p>No address available</p>
