@@ -152,6 +152,15 @@ Route::middleware(['employee'])->group(function () {
     Route::get('/laborer-home', function() {
         return view('pages.auth.employee.laborer_homepage');
     })->name('laborer-homepage');
+
+    // Logout Route
+    Route::post('/sign-out', function() {
+        Auth::logout();
+        session()->invalidate();
+        session()->regenerateToken();
+
+        return redirect()->route('sign-in.selection');
+    })->name('sign-out');
 });
 
 
