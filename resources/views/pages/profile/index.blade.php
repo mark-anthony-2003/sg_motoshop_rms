@@ -172,7 +172,37 @@
                             <div class="tab-content">
                                 {{-- All --}}
                                 <div class="tab-pane fade show active" id="v-pills-all" role="tabpanel" aria-labelledby="v-pills-all-tab">
-                                    <p class="text-center py-4">No Orders Yet</p>
+                                    {{-- <p class="text-center py-4">No Orders Yet</p> --}}
+                                    <div class="card-body">
+                                        <table class="table table-bordered">
+                                            <thead>
+                                                <tr>
+                                                    <th>Product Name</th>
+                                                    <th>Price</th>
+                                                    <th>Shipment Status</th>
+                                                    <th>Payment Method</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @forelse ($orders as $order)
+                                                    <tr class="align-middle">
+                                                        <td>{{ Str::title($order->cart->item->item_name) }}</td>
+                                                        <td>₱{{ number_format($order->cart->item->price) }}</td>
+                                                        <td>
+                                                            <span class="badge {{ $order->shipment_item_status === 'pending' ? 'text-bg-danger' : 'text-bg-success' }}">
+                                                                {{ strtoupper($order->shipment_item_status) }}
+                                                            </span>    
+                                                        </td>
+                                                        <td>{{ ucfirst(str_replace('_', ' ', $order->payment_method)) }}</td>
+                                                    </tr>
+                                                @empty
+                                                    <tr>
+                                                        <td colspan="2" class="text-center">No Orders Yet</td>
+                                                    </tr>
+                                                @endforelse
+                                            </tbody>
+                                        </table>
+                                    </div>
                                 </div>
                                 {{-- Unpaid --}}
                                 <div class="tab-pane fade" id="v-pills-unpaid" role="tabpanel" aria-labelledby="v-pills-unpaid-tab">

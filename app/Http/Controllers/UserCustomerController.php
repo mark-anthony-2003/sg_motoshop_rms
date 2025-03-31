@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Shipment;
 use App\Models\User;
 use Illuminate\Http\Request;
 
@@ -16,7 +17,9 @@ class UserCustomerController extends Controller
     public function showCustomerProfile($userId)
     {
         $user = User::findOrFail($userId);
-        return view('pages.profile.index', compact('user'));
+        $orders = Shipment::all();
+        
+        return view('pages.profile.index', compact('user', 'orders'));
     }
 
     public function updateCustomerProfile(Request $request, $customerId)
