@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\ServiceDetail;
 use App\Models\Shipment;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -18,8 +19,9 @@ class UserCustomerController extends Controller
     {
         $user = User::findOrFail($userId);
         $orders = Shipment::all();
+        $reservations = ServiceDetail::with(['service', 'serviceType'])->get();
         
-        return view('pages.profile.index', compact('user', 'orders'));
+        return view('pages.profile.index', compact('user', 'orders', 'reservations'));
     }
 
     public function updateCustomerProfile(Request $request, $customerId)

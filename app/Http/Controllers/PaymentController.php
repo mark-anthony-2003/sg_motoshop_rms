@@ -113,6 +113,6 @@ class PaymentController extends Controller
 
     public function paymentSuccess()
     {
-        return view('pages.payment.success')->with('success', 'Payment successfully processed.');
+        return view('pages.index')->with('success', 'Payment successfully processed.');
     }
 }

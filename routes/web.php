@@ -10,8 +10,9 @@ use App\Http\Controllers\UserSignInController;
 use App\Http\Controllers\UserSignUpController;
 use App\Http\Controllers\OrderItemController;
 use App\Http\Controllers\PaymentController;
-use App\Http\Controllers\ReservationController;
+use App\Http\Controllers\ServiceTransactionController;
 use App\Http\Controllers\ShipmentController;
+use App\Models\ServiceTransaction;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -50,28 +51,21 @@ Route::middleware('guest')->group(function() {
         return view('pages.auth.index');
     })->name('sign-in.selection');
 
-    Route::get('/sign-in/customer', [UserSignInController::class, 'showCustomerForm'])
-        ->name('sign-in.customer');
-    Route::get('/sign-in/employee', [UserSignInController::class, 'showEmployeeForm'])
-        ->name('sign-in.employee');
-    Route::get('/admin', [UserSignInController::class, 'showAdminForm'])
-        ->name('sign-in.admin');
-    
-    Route::post('/sign-in', [UserSignInController::class, 'signIn'])
-        ->name('sign-in.submit');
+    // Sign in as Admin
+    Route::get('/admin', [UserSignInController::class, 'showAdminForm'])->name('sign-in.admin');
 
-    Route::get('/sign-up', [UserSignUpController::class, 'showCustomerForm'])
-        ->name('sign-up');
-    Route::post('/sign-up', [UserSignUpController::class, 'signUp'])
-        ->name('sign-up.submit');
+    // Sign in as Customer
+    Route::get('/sign-in/customer', [UserSignInController::class, 'showCustomerForm'])->name('sign-in.customer');
+    Route::post('/sign-in', [UserSignInController::class, 'signIn'])->name('sign-in.submit');
+    // Sign up as Customer
+    Route::get('/sign-up', [UserSignUpController::class, 'showCustomerForm'])->name('sign-up');
+    Route::post('/sign-up', [UserSignUpController::class, 'signUp'])->name('sign-up.submit');
     
     // Sign in as Employee
-    Route::get('/sign-in/employee/manager', [UserSignInController::class, 'showEmployeeManagerForm'])
-        ->name('sign-in.employee-manager');
-    Route::get('/sign-in/employee/laborer', [UserSignInController::class, 'showEmployeeLaborerForm'])
-        ->name('sign-in.employee-laborer');
-    Route::post('/sign-in/employee', [UserSignInController::class, 'employeeSignin'])
-        ->name('sign-in.employee-submit');
+    Route::get('/sign-in/employee', [UserSignInController::class, 'showEmployeeForm'])->name('sign-in.employee');
+    Route::get('/sign-in/employee/manager', [UserSignInController::class, 'showEmployeeManagerForm'])->name('sign-in.employee-manager');
+    Route::get('/sign-in/employee/laborer', [UserSignInController::class, 'showEmployeeLaborerForm'])->name('sign-in.employee-laborer');
+    Route::post('/sign-in/employee', [UserSignInController::class, 'employeeSignin'])->name('sign-in.employee-submit');
 });
 
 // Admin Routes (Admin Access)
@@ -85,66 +79,40 @@ Route::middleware(['auth', 'admin'])->group(function() {
 
     // Product Management (Admin Only)
     Route::prefix('items')->group(function() {
-        Route::get('/', [ItemController::class, 'showItemsTable'])
-            ->name('items-table');
-        Route::get('/create-item', [ItemController::class, 'showItemForm'])
-            ->name('create-item');
-        Route::post('/store-item', [ItemController::class, 'storeItem'])
-            ->name('store-item');
-        Route::get('/{item}', [ItemController::class, 'showItemDetail'])
-            ->name('show-item');
-        Route::get('/{item}/edit', [ItemController::class, 'editItem'])
-            ->name('edit-item');
-        Route::post('/{item}/update', [ItemController::class, 'updateItem'])
-            ->name('update-item');
-        Route::post('/{item}/delete', [ItemController::class, 'deleteItem'])
-            ->name('delete-item');
+        Route::get('/', [ItemController::class, 'showItemsTable'])->name('items-table');
+        Route::get('/create-item', [ItemController::class, 'showItemForm'])->name('create-item');
+        Route::post('/store-item', [ItemController::class, 'storeItem'])->name('store-item');
+        Route::get('/{item}', [ItemController::class, 'showItemDetail'])->name('show-item');
+        Route::get('/{item}/edit', [ItemController::class, 'editItem'])->name('edit-item');
+        Route::post('/{item}/update', [ItemController::class, 'updateItem'])->name('update-item');
+        Route::post('/{item}/delete', [ItemController::class, 'deleteItem'])->name('delete-item');
     });
 
     // Service Type Management
     Route::prefix('service-types')->group(function() {
-        Route::get('/', [ServiceTypeController::class, 'showServiceTypesTable'])
-            ->name('service-type-table');
-        Route::get('/create-service-type', [ServiceTypeController::class, 'showServiceTypeForm'])
-            ->name('create-service-type');
-        Route::post('/store-service-type', [ServiceTypeController::class, 'storeServiceType'])
-            ->name('store-service-type');
-        Route::get('/{serviceType}/edit', [ServiceTypeController::class, 'editServiceType'])
-            ->name('edit-service-type');
-        Route::post('/{serviceType}/update', [ServiceTypeController::class, 'updateServiceType'])
-            ->name('update-service-type');
-        Route::post('/{serviceType}/delete', [ServiceTypeController::class, 'deleteServiceType'])
-            ->name('delete-service-type');
+        Route::get('/', [ServiceTypeController::class, 'showServiceTypesTable'])->name('service-type-table');
+        Route::get('/create-service-type', [ServiceTypeController::class, 'showServiceTypeForm'])->name('create-service-type');
+        Route::post('/store-service-type', [ServiceTypeController::class, 'storeServiceType'])->name('store-service-type');
+        Route::get('/{serviceType}/edit', [ServiceTypeController::class, 'editServiceType'])->name('edit-service-type');
+        Route::post('/{serviceType}/update', [ServiceTypeController::class, 'updateServiceType'])->name('update-service-type');
+        Route::post('/{serviceType}/delete', [ServiceTypeController::class, 'deleteServiceType'])->name('delete-service-type');
     });
 
     // User Management - Customers (Admin Access Only)
     Route::prefix('customers')->group(function() {
-        Route::get('/', [UserCustomerController::class, 'showCustomersTable'])
-            ->name('customers-table');
+        Route::get('/', [UserCustomerController::class, 'showCustomersTable'])->name('customers-table');
     });
     // User Management - Employees (Admin Access Only)
     Route::prefix('employees')->group(function() {
-        Route::get('/', [UserEmployeeController::class, 'showEmployeesTable'])
-            ->name('employees-table');
-        Route::get('/{employeeInfo}', [UserEmployeeController::class, 'adminShowEmployeeInfo'])
-            ->name('show-employeeInfo');
-        Route::get('/{employeeInfo}/edit', [UserEmployeeController::class, 'adminEditEmployeeInfo'])
-            ->name('edit.employeeInfo');
-        Route::post('/{employeeInfo}/update', [UserEmployeeController::class, 'adminUpdateEmployeeInfo'])
-            ->name('update.employeeInfo');
+        Route::get('/', [UserEmployeeController::class, 'showEmployeesTable'])->name('employees-table');
+        Route::get('/{employeeInfo}', [UserEmployeeController::class, 'adminShowEmployeeInfo'])->name('show-employeeInfo');
+        Route::get('/{employeeInfo}/edit', [UserEmployeeController::class, 'adminEditEmployeeInfo'])->name('edit.employeeInfo');
+        Route::post('/{employeeInfo}/update', [UserEmployeeController::class, 'adminUpdateEmployeeInfo'])->name('update.employeeInfo');
     });
-
-    // Logout Route
-    Route::post('/sign-out', function() {
-        Auth::logout();
-        session()->invalidate();
-        session()->regenerateToken();
-
-        return redirect()->route('sign-in.selection');
-    })->name('sign-out');
 });
 
-Route::middleware(['employee'])->group(function () {
+// Employee Routes
+Route::middleware(['auth', 'employee'])->group(function () {
     Route::get('/manager-home', function() {
         return view('pages.auth.employee.manager_homepage');
     })->name('manager-homepage');
@@ -153,73 +121,42 @@ Route::middleware(['employee'])->group(function () {
         return view('pages.auth.employee.laborer_homepage');
     })->name('laborer-homepage');
 
-    // Logout Route
-    Route::post('/sign-out', function() {
-        Auth::logout();
-        session()->invalidate();
-        session()->regenerateToken();
-
-        return redirect()->route('sign-in.selection');
-    })->name('sign-out');
+    // Employee Routes
+    Route::prefix('/employee')->group(function() {
+        // Profile Settings
+        Route::get('/{userId}', [UserEmployeeController::class, 'showEmployeeProfile'])->name('employee.profile');
+        Route::post('/{userId}', [UserEmployeeController::class, 'updateEmployeeProfile'])->name('employee.profile_update');
+    });
 });
 
-
-Route::middleware('auth')->group(function() {
+// Customer Routes
+Route::middleware(['auth', 'customer'])->group(function() {
     // Customer Routes
     Route::prefix('customer')->group(function() {
         // Profile Settings
-        Route::get('/{userId}/profile', [UserCustomerController::class, 'showCustomerProfile'])
-            ->name('customer.profile');
-        Route::post('/{userId}/profile', [UserCustomerController::class, 'updateCustomerProfile'])
-            ->name('customer.profile_update');
+        Route::get('/{userId}/profile', [UserCustomerController::class, 'showCustomerProfile'])->name('customer.profile');
+        Route::post('/{userId}/profile', [UserCustomerController::class, 'updateCustomerProfile'])->name('customer.profile_update');
     });
 
     Route::prefix('shop')->group(function() {
         // Items
-        Route::get('/items', [OrderItemController::class, 'showItemCards'])
-            ->name('shop.items');
-        Route::get('/items/{orderItemId}', [OrderItemController::class, 'showItemCardDetail'])
-            ->name('shop.showOrderItem');
-        Route::post('/items/{orderItemId}', [OrderItemController::class, 'addToCartItem'])
-            ->name('shop.addToCartItem');
+        Route::get('/items', [OrderItemController::class, 'showItemCards'])->name('shop.items');
+        Route::get('/items/{orderItemId}', [OrderItemController::class, 'showItemCardDetail'])->name('shop.showOrderItem');
+        Route::post('/items/{orderItemId}', [OrderItemController::class, 'addToCartItem'])->name('shop.addToCartItem');
 
         // Orders
-        Route::post('/order-summary', [OrderItemController::class, 'checkoutCartItems'])
-            ->name('shop.orderSummary');
-        Route::get('/order-summary', [OrderItemController::class, 'showOrderSummary'])
-            ->name('shop.showOrderSummary');
+        Route::post('/order-summary', [OrderItemController::class, 'checkoutCartItems'])->name('shop.orderSummary');
+        Route::get('/order-summary', [OrderItemController::class, 'showOrderSummary'])->name('shop.showOrderSummary');
 
         // Orders Payment
-        Route::post('/payment/gcash', [PaymentController::class, 'processPayment'])
-            ->name('payment.process');
-        Route::get('/payment/success', [PaymentController::class, 'paymentSuccess'])
-            ->name('payment.success');
+        Route::post('/payment/gcash', [PaymentController::class, 'processPayment'])->name('payment.process');
+        Route::get('/payment/success', [PaymentController::class, 'paymentSuccess'])->name('payment.success');
         Route::post('/webhook/adyen', [AdyenWebhookController::class, 'handle']);
         
         // Reservation
-        Route::get('/reservation', [ReservationController::class, 'showReservationForm'])
-            ->name('shop.reservation');
-        // Route::post('/reservation', [ReservationController::class, 'createReservation'])
-        //     ->name('shop.makeReservation');
+        Route::get('/reservation', [ServiceTransactionController::class, 'showReservationForm'])->name('shop.reservation');
+        Route::post('/reservation/{customerId}', [ServiceTransactionController::class, 'makeReservation'])->name('shop.reservation.submit');
     });
-
-    // Employee Routes
-    Route::prefix('/employee')->group(function() {
-        // Profile Settings
-        Route::get('/{userId}', [UserEmployeeController::class, 'showEmployeeProfile'])
-            ->name('employee.profile');
-        Route::post('/{userId}', [UserEmployeeController::class, 'updateEmployeeProfile'])
-            ->name('employee.profile_update');
-    });
-    
-    // Logout Route
-    Route::post('/sign-out', function() {
-        Auth::logout();
-        session()->invalidate();
-        session()->regenerateToken();
-
-        return redirect()->route('sign-in.selection');
-    })->name('sign-out');
 });
 
 // Address API Routes
@@ -229,4 +166,13 @@ Route::prefix('address')->group(function() {
     Route::get('/cities/{provinceCode}', [AddressController::class, 'getStates']);
     Route::get('/barangays/{stateCode}', [AddressController::class, 'getBarangays']);
 });
+
+// Universal Logout Route (for all authenticated users)
+Route::middleware(['auth'])->post('/sign-out', function () {
+    Auth::logout();
+    session()->invalidate();
+    session()->regenerateToken();
+
+    return redirect()->route('sign-in.selection');
+})->name('sign-out');
 

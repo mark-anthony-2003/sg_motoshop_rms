@@ -27,7 +27,9 @@ class DatabaseSeeder extends Seeder
             SalaryTypeSeeder::class,
             EmployeeSeeder::class,
             ManagerTypeSeeder::class,
-            LaborerTypeSeeder::class
+            LaborerTypeSeeder::class,
+            ServiceTypeSeeder::class,
+            PartSeeder::class
         ]);
     }
 }

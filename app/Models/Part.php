@@ -18,6 +18,6 @@ class Part extends Model
 
     public function serviceDetail(): BelongsTo
     {
-        return $this->belongsTo(ServiceDetail::class);
+        return $this->belongsTo(ServiceDetail::class, 'part_id');
     }
 }

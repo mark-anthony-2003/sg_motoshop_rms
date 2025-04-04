@@ -13,12 +13,10 @@ return new class extends Migration
     {
         Schema::create('service_transactions', function (Blueprint $table) {
             $table->id('service_transaction_id');
-            $table->uuid('user_id');
+            $table->foreignUuid('user_id')->constrained('users', 'user_id')->onDelete('cascade');
             $table->foreignId('service_id')->constrained('services', 'service_id')->onDelete('cascade');
-            //$table->foreignId('employee_id')->nullable()->constrained('employees', 'employee_id')->onDelete('cascade');
+            // $table->foreignId('employee_id')->nullable()->constrained('employees', 'employee_id')->onDelete('cascade');
             $table->timestamps();
-
-            $table->foreign('user_id')->references('user_id')->on('users')->onDelete('cascade');
         });
     }
 

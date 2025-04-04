@@ -42,7 +42,7 @@
                                     <div class="flex-grow-1">
                                         <h5 class="mb-1">{{ Str::title($cart->item->item_name) }}</h5>
                                         <p class="mb-1"><strong>Quantity:</strong> {{ $cart->quantity }}</p>
-                                        <p class="mb-1"><strong>Subtotal:</strong> ₱{{ number_format($cart->sub_total, 2) }}</p>d
+                                        <p class="mb-1"><strong>Subtotal:</strong> ₱{{ number_format($cart->sub_total, 2) }}</p>
                                     </div>
                                 </div>
                                 @if(!$loop->last)

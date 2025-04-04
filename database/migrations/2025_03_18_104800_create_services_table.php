@@ -13,9 +13,11 @@ return new class extends Migration
     {
         Schema::create('services', function (Blueprint $table) {
             $table->id('service_id');
-            $table->integer('total_amount');
-            $table->enum('payment_method', ['cash_on_delivery', 'e_payment'])->default('cash_on_delivery');
+            $table->decimal('total_amount', 10, 2);
+            $table->enum('payment_method', ['cash', 'gcash'])->default('cash');
             $table->enum('payment_status', ['pending', 'completed'])->default('pending');
+            $table->string('ref_no')->nullable();
+            $table->date('preferred_date');
             $table->timestamps();
         });
     }

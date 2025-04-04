@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class ServiceType extends Model
 {
@@ -16,11 +16,11 @@ class ServiceType extends Model
         'service_type_name',
         'service_type_price',
         'service_type_image',
-        'service_status'
+        'service_type_status'
     ];
 
-    public function serviceDetail(): BelongsTo
+    public function serviceDetail(): HasMany
     {
-        return $this->belongsTo(ServiceDetail::class);
+        return $this->hasMany(ServiceDetail::class, 'service_type_id', 'service_type_id');
     }
 }

@@ -88,7 +88,7 @@
                                         <input type="email" name="email" class="form-control" value="{{ old('email', $user->email) }}" readonly>
                                     </div>
                                     <div class="col-md-4">
-                                        <label for="contact_no" class="form-label">Contact Number</label>
+                                        <label for="contact_no" class="form-label">Contact No</label>
                                         <input type="text" name="contact_no" class="form-control" value="{{ old('contact_no', $user->contact_no) }}">
                                     </div>
                                     <div class="col-md-4">
@@ -193,7 +193,7 @@
                                                                 {{ strtoupper($order->shipment_item_status) }}
                                                             </span>    
                                                         </td>
-                                                        <td>{{ ucfirst(str_replace('_', ' ', $order->payment_method)) }}</td>
+                                                        <td>{{ Str::title(str_replace('_', ' ', $order->payment_method)) }}</td>
                                                     </tr>
                                                 @empty
                                                     <tr>
@@ -226,7 +226,39 @@
                         <!-- Reservations History -->
                         <div class="tab-pane fade" id="v-pills-reservations" role="tabpanel" aria-labelledby="v-pills-reservations-tab">
                             <h4>Reservations History</h4>
-                            <p>View your past reservations here.</p>
+                            <div class="card-body">
+                                <table class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>Service Type</th>
+                                            <th>Amount</th>
+                                            <th>Preffered Date</th>
+                                            <th>Payment Method</th>
+                                            <th>Payment Status</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @forelse ($reservations as $reservation)
+                                            <tr class="align-middle">
+                                                <td>{{ Str::title($reservation->serviceType->service_type_name) }}</td>
+                                                <td>₱{{ number_format($reservation->serviceType->service_type_price) }}</td>
+                                                <td>{{ \Carbon\Carbon::parse($reservation->service->preferred_date)->format('l, F, j, Y') }}</td>
+
+                                                <td>{{ Str::title(str_replace('_', ' ', $reservation->service->payment_method)) }}</td>
+                                                <td>
+                                                    <span class="badge {{ $reservation->service->payment_status === 'pending' ? 'text-bg-danger' : 'text-bg-success' }}">
+                                                        {{ strtoupper($reservation->service->payment_status) }}
+                                                    </span>
+                                                </td>
+                                            </tr>
+                                        @empty
+                                            <tr>
+                                                <td colspan="2" class="text-center">No Orders Yet</td>
+                                            </tr>
+                                        @endforelse
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
                     </div>
                 </div>

@@ -53,8 +53,8 @@
                                             <td>{{ $serviceType->service_type_name }}</td>
                                             <td>{{ number_format($serviceType->service_type_price, 2) }}</td>
                                             <td>
-                                                <span class="badge {{ $serviceType->service_status === 'available' ? 'text-bg-success' : 'text-bg-danger' }}">
-                                                    {{ strtoupper(ucfirst(str_replace('_', ' ', $serviceType->service_status))) }}
+                                                <span class="badge {{ $serviceType->service_type_status === 'available' ? 'text-bg-success' : 'text-bg-danger' }}">
+                                                    {{ strtoupper(ucfirst(str_replace('_', ' ', $serviceType->service_type_status))) }}
                                                 </span>
                                             </td>                                            
                                             <td class="text-center">

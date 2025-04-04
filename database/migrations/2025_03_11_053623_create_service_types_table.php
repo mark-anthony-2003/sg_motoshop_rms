@@ -15,8 +15,8 @@ return new class extends Migration
             $table->id('service_type_id');
             $table->string('service_type_name');
             $table->integer('service_type_price');
-            $table->string('service_type_image');
-            $table->enum('service_status', ['available', 'not_available'])->default('available');
+            $table->string('service_type_image')->nullable();
+            $table->enum('service_type_status', ['available', 'not_available'])->default('available');
             $table->timestamps();
         });
     }
