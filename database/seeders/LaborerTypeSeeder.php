@@ -6,7 +6,7 @@ use App\Models\Employee;
 use App\Models\Laborer;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
-
+ 
 class LaborerTypeSeeder extends Seeder
 {
     /**

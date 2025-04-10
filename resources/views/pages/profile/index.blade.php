@@ -119,7 +119,7 @@
                                         <label for="city" class="form-label">City/Town/Municipality</label>
                                         <select name="city" id="city" class="form-control">
                                             <option value="{{ old('city', $user->addresses->first()->city ?? '') }}" selected>
-                                                {{ old('city', $user->addresses->first()->city ?? 'Select City/Town/Municipality') }}
+                                                {{ old('city', $user->addresses->first()->city ?? 'Select cdCity/Town/Municipality') }}
                                             </option>
                                         </select>
                                     </div>
@@ -172,37 +172,36 @@
                             <div class="tab-content">
                                 {{-- All --}}
                                 <div class="tab-pane fade show active" id="v-pills-all" role="tabpanel" aria-labelledby="v-pills-all-tab">
-                                    {{-- <p class="text-center py-4">No Orders Yet</p> --}}
-                                    <div class="card-body">
-                                        <table class="table table-bordered">
-                                            <thead>
-                                                <tr>
-                                                    <th>Product Name</th>
-                                                    <th>Price</th>
-                                                    <th>Shipment Status</th>
-                                                    <th>Payment Method</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                @forelse ($orders as $order)
-                                                    <tr class="align-middle">
-                                                        <td>{{ Str::title($order->cart->item->item_name) }}</td>
-                                                        <td>₱{{ number_format($order->cart->item->price) }}</td>
-                                                        <td>
-                                                            <span class="badge {{ $order->shipment_item_status === 'pending' ? 'text-bg-danger' : 'text-bg-success' }}">
-                                                                {{ strtoupper($order->shipment_item_status) }}
-                                                            </span>    
-                                                        </td>
-                                                        <td>{{ Str::title(str_replace('_', ' ', $order->payment_method)) }}</td>
-                                                    </tr>
-                                                @empty
+                                    @if ($orders->isNotEmpty())
+                                        <div class="card-body">
+                                            <table class="table table-bordered">
+                                                <thead>
                                                     <tr>
-                                                        <td colspan="2" class="text-center">No Orders Yet</td>
+                                                        <th>Product Name</th>
+                                                        <th>Price</th>
+                                                        <th>Shipment Status</th>
+                                                        <th>Payment Method</th>
                                                     </tr>
-                                                @endforelse
-                                            </tbody>
-                                        </table>
-                                    </div>
+                                                </thead>
+                                                <tbody>
+                                                    @foreach ($orders as $order)
+                                                        <tr class="align-middle">
+                                                            <td>{{ Str::title($order->cart->item->item_name) }}</td>
+                                                            <td>₱{{ number_format($order->cart->item->price) }}</td>
+                                                            <td>
+                                                                <span class="badge {{ $order->shipment_item_status === 'pending' ? 'text-bg-danger' : 'text-bg-success' }}">
+                                                                    {{ strtoupper($order->shipment_item_status) }}
+                                                                </span>    
+                                                            </td>
+                                                            <td>{{ Str::title(str_replace('_', ' ', $order->payment_method)) }}</td>
+                                                        </tr>
+                                                    @endforeach
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    @else
+                                        <p class="text-center py-4">No Orders Yet</p>
+                                    @endif
                                 </div>
                                 {{-- Unpaid --}}
                                 <div class="tab-pane fade" id="v-pills-unpaid" role="tabpanel" aria-labelledby="v-pills-unpaid-tab">
